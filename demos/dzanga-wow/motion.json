@@ -1,0 +1,135 @@
+{
+  "timelines": {
+    "story": {
+      "source": "timeline.primary",
+      "tracks": [
+        { "target": "@camera", "channel": "x", "keyframes": [
+          { "at": 0.00, "value": 760 }, { "at": 0.23, "value": 1260, "easing": "smoothstep" },
+          { "at": 0.50, "value": 1860, "easing": "smoothstep" }, { "at": 0.78, "value": 2580, "easing": "smoothstep" },
+          { "at": 1.00, "value": 2860, "easing": "easeInOutCubic" }
+        ]},
+        { "target": "@camera", "channel": "y", "keyframes": [
+          { "at": 0.00, "value": 1660 }, { "at": 0.23, "value": 1390 }, { "at": 0.50, "value": 1110 },
+          { "at": 0.78, "value": 800 }, { "at": 1.00, "value": 760 }
+        ]},
+        { "target": "@camera", "channel": "scale", "keyframes": [
+          { "at": 0.00, "value": 0.48 }, { "at": 0.24, "value": 0.66 }, { "at": 0.52, "value": 0.86 },
+          { "at": 0.78, "value": 1.12 }, { "at": 1.00, "value": 1.62, "easing": "easeInOutCubic" }
+        ]},
+        { "target": "corridor.main", "channel": "draw", "keyframes": [
+          { "at": 0.08, "value": 0 }, { "at": 0.55, "value": 1, "easing": "smoothstep" }
+        ]},
+        { "target": "bai.main", "channel": "opacity", "keyframes": [
+          { "at": 0.00, "value": 0.28 }, { "at": 0.58, "value": 0.38 }, { "at": 0.82, "value": 1 }
+        ]},
+        { "target": "bai.minerals", "channel": "opacity", "keyframes": [
+          { "at": 0.00, "value": 0 }, { "at": 0.72, "value": 0 }, { "at": 1.00, "value": 1, "easing": "smoothstep" }
+        ]},
+        { "target": "roots.main", "channel": "opacity", "keyframes": [
+          { "at": 0.00, "value": 0 }, { "at": 0.80, "value": 0.08 }, { "at": 1.00, "value": 0.84, "easing": "smootherstep" }
+        ]},
+        { "target": "animals.tracks", "channel": "opacity", "keyframes": [
+          { "at": 0.00, "value": 0 }, { "at": 0.36, "value": 0.18 }, { "at": 0.62, "value": 0.88 }, { "at": 1.00, "value": 0.52 }
+        ]}
+      ]
+    },
+
+    "ambient-bands-a": {
+      "source": "time.sineSlower",
+      "tracks": [
+        { "target": "atmosphere.bandA", "channel": "translateX", "keyframes": [ { "at": 0, "value": -180 }, { "at": 1, "value": 210, "easing": "smoothstep" } ] },
+        { "target": "atmosphere.bandA", "channel": "translateY", "keyframes": [ { "at": 0, "value": 70 }, { "at": 1, "value": -55 } ] },
+        { "target": "atmosphere.bandA", "channel": "opacity", "keyframes": [ { "at": 0, "value": 0.34 }, { "at": 1, "value": 0.66 } ] }
+      ]
+    },
+    "ambient-bands-b": {
+      "source": "time.sineSlow",
+      "tracks": [
+        { "target": "atmosphere.bandB", "channel": "translateX", "keyframes": [ { "at": 0, "value": 150 }, { "at": 1, "value": -230, "easing": "smoothstep" } ] },
+        { "target": "atmosphere.bandB", "channel": "translateY", "keyframes": [ { "at": 0, "value": -60 }, { "at": 1, "value": 85 } ] },
+        { "target": "atmosphere.bandB", "channel": "opacity", "keyframes": [ { "at": 0, "value": 0.26 }, { "at": 1, "value": 0.57 } ] }
+      ]
+    },
+    "ambient-bands-c": {
+      "source": "time.loopSlower",
+      "tracks": [
+        { "target": "atmosphere.bandC", "channel": "translateX", "keyframes": [ { "at": 0, "value": -420 }, { "at": 1, "value": 420 } ] },
+        { "target": "atmosphere.bandC", "channel": "opacity", "keyframes": [ { "at": 0, "value": 0.18 }, { "at": 0.5, "value": 0.5 }, { "at": 1, "value": 0.18 } ] }
+      ]
+    },
+    "ambient-light": {
+      "source": "time.sineSlower",
+      "tracks": [
+        { "target": "atmosphere.light", "channel": "translateX", "keyframes": [ { "at": 0, "value": -120 }, { "at": 1, "value": 160 } ] },
+        { "target": "atmosphere.light", "channel": "opacity", "keyframes": [ { "at": 0, "value": 0.22 }, { "at": 1, "value": 0.54 } ] }
+      ]
+    },
+    "ambient-mist": {
+      "source": "time.sineSlow",
+      "tracks": [
+        { "target": "atmosphere.mist", "channel": "translateX", "keyframes": [ { "at": 0, "value": -80 }, { "at": 1, "value": 95 } ] },
+        { "target": "atmosphere.mist", "channel": "opacity", "keyframes": [ { "at": 0, "value": 0.48 }, { "at": 1, "value": 0.74 } ] }
+      ]
+    },
+
+    "birds-a": {
+      "source": "time.loopSlow",
+      "tracks": [
+        { "target": "animals.birdsA", "channel": "pathPosition", "path": "path.birdsA", "keyframes": [ { "at": 0, "value": 0 }, { "at": 1, "value": 1 } ] },
+        { "target": "animals.birdsA", "channel": "opacity", "keyframes": [ { "at": 0, "value": 0 }, { "at": 0.08, "value": 0.8 }, { "at": 0.88, "value": 0.8 }, { "at": 1, "value": 0 } ] }
+      ]
+    },
+    "birds-b": {
+      "source": "time.loopSlower",
+      "tracks": [
+        { "target": "animals.birdsB", "channel": "pathPosition", "path": "path.birdsB", "keyframes": [ { "at": 0, "value": 0 }, { "at": 1, "value": 1 } ] },
+        { "target": "animals.birdsB", "channel": "opacity", "keyframes": [ { "at": 0, "value": 0 }, { "at": 0.12, "value": 0.65 }, { "at": 0.90, "value": 0.65 }, { "at": 1, "value": 0 } ] }
+      ]
+    },
+    "elephant-pass": {
+      "source": "time.loopSlower",
+      "tracks": [
+        { "target": "animals.elephant", "channel": "pathPosition", "path": "path.elephant", "keyframes": [ { "at": 0, "value": 0 }, { "at": 1, "value": 1, "easing": "smoothstep" } ] },
+        { "target": "animals.elephant", "channel": "opacity", "keyframes": [ { "at": 0, "value": 0 }, { "at": 0.18, "value": 0 }, { "at": 0.32, "value": 0.48 }, { "at": 0.76, "value": 0.48 }, { "at": 0.90, "value": 0 } ] }
+      ]
+    },
+    "butterfly-loop": {
+      "source": "time.loopFast",
+      "tracks": [
+        { "target": "animals.butterflies", "channel": "pathPosition", "path": "path.butterflies", "keyframes": [ { "at": 0, "value": 0 }, { "at": 1, "value": 1 } ] },
+        { "target": "animals.butterflies", "channel": "rotate", "keyframes": [ { "at": 0, "value": -8 }, { "at": 0.5, "value": 9 }, { "at": 1, "value": -8 } ] }
+      ]
+    },
+    "dragonfly-breathe": {
+      "source": "time.sineSlow",
+      "tracks": [
+        { "target": "animals.dragonflies", "channel": "translateX", "keyframes": [ { "at": 0, "value": -34 }, { "at": 1, "value": 48 } ] },
+        { "target": "animals.dragonflies", "channel": "translateY", "keyframes": [ { "at": 0, "value": 18 }, { "at": 1, "value": -26 } ] }
+      ]
+    },
+
+    "scroll-energy": {
+      "source": "input.activity",
+      "tracks": [
+        { "target": "forest.canopy", "channel": "scale", "keyframes": [ { "at": 0, "value": 1 }, { "at": 1, "value": 1.018, "easing": "smoothstep" } ] },
+        { "target": "river.glint", "channel": "opacity", "keyframes": [ { "at": 0, "value": 0.28 }, { "at": 1, "value": 0.92 } ] },
+        { "target": "atmosphere.bandA", "channel": "scale", "keyframes": [ { "at": 0, "value": 1 }, { "at": 1, "value": 1.08 } ] }
+      ]
+    },
+    "scroll-direction": {
+      "source": "input.scrollDirection",
+      "tracks": [
+        { "target": "atmosphere.mist", "channel": "translateY", "keyframes": [ { "at": -1, "value": -38 }, { "at": 0, "value": 0 }, { "at": 1, "value": 38 } ] }
+      ]
+    },
+    "semantic-depth": {
+      "source": "camera.scale",
+      "tracks": [
+        { "target": "roots.main", "channel": "opacity", "keyframes": [ { "at": 0.7, "value": 0 }, { "at": 1.45, "value": 0.2 }, { "at": 2.35, "value": 0.9 } ] },
+        { "target": "micro.fireflies", "channel": "opacity", "keyframes": [ { "at": 0.9, "value": 0 }, { "at": 1.3, "value": 0.3 }, { "at": 2.1, "value": 1 } ] },
+        { "target": "micro.frogs", "channel": "opacity", "keyframes": [ { "at": 1.3, "value": 0 }, { "at": 1.9, "value": 0.85 } ] },
+        { "target": "river.braids", "channel": "opacity", "keyframes": [ { "at": 0.5, "value": 0.05 }, { "at": 1.0, "value": 0.72 }, { "at": 2.0, "value": 1 } ] }
+      ]
+    }
+  }
+}

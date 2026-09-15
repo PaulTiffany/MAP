@@ -19,6 +19,10 @@ export class SemanticMotionRuntime {
     this.scrollSensitivity = 0.0012;
     this.dragSensitivity = 0.0024;
     this.lastWorldTransform = '';
+    this.reducedMotion = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.usesTime = !this.reducedMotion && Object.values(this.motionSpec.timelines || {})
+      .some(timeline => String(timeline.source || '').startsWith('time.'));
+    this.timeOrigin = performance.now();
 
     const world = this.worldSpec.world || {};
     this.camera = new Camera2D({
@@ -41,7 +45,13 @@ export class SemanticMotionRuntime {
       'camera.userZoom': 1,
       'input.scrollVelocity': 0,
       'input.scrollDirection': 0,
-      'input.activity': 0
+      'input.activity': 0,
+      'time.seconds': 0,
+      'time.loopFast': 0,
+      'time.loopSlow': 0,
+      'time.loopSlower': 0,
+      'time.sineSlow': 0.5,
+      'time.sineSlower': 0.5
     });
     this.timeline = new TimelineSampler(this.motionSpec);
     this.renderer = new SVGRenderer(sceneRoot, this.worldSpec);
@@ -56,13 +66,8 @@ export class SemanticMotionRuntime {
   setMode(mode) {
     if (mode !== 'free' && mode !== 'timeline') throw new Error(`Unknown mode: ${mode}`);
     if (mode === this.mode) return;
-    if (mode === 'timeline') {
-      this.guide = this.camera.snapshot();
-      this.userView = { dx: 0, dy: 0, zoom: 1 };
-    } else {
-      this.guide = this.camera.snapshot();
-      this.userView = { dx: 0, dy: 0, zoom: 1 };
-    }
+    this.guide = this.camera.snapshot();
+    this.userView = { dx: 0, dy: 0, zoom: 1 };
     this.mode = mode;
     this.scheduler.invalidate();
   }
@@ -136,7 +141,24 @@ export class SemanticMotionRuntime {
     });
   }
 
-  frame = ({ dt }) => {
+  updateTime(now) {
+    if (!this.usesTime) return;
+    const seconds = (now - this.timeOrigin) / 1000;
+    const loop = period => (seconds % period) / period;
+    const sine = period => (Math.sin((seconds / period) * Math.PI * 2) + 1) / 2;
+    this.signals.patch({
+      'time.seconds': seconds,
+      'time.loopFast': loop(9),
+      'time.loopSlow': loop(24),
+      'time.loopSlower': loop(46),
+      'time.sineSlow': sine(18),
+      'time.sineSlower': sine(38)
+    });
+  }
+
+  frame = ({ dt, now }) => {
+    this.updateTime(now);
+
     let velocity = this.signals.get('input.scrollVelocity');
     velocity *= Math.exp(-dt / 140);
     if (Math.abs(velocity) < 0.01) velocity = 0;
@@ -170,7 +192,7 @@ export class SemanticMotionRuntime {
       this.lastWorldTransform = transform;
     }
 
-    return velocity !== 0;
+    return velocity !== 0 || this.usesTime;
   };
 
   applyGuideCommand(command) {
