@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/semantic-motion/motion.schema.json",
+  "title": "Semantic Motion choreography specification",
+  "type": "object",
+  "required": ["timelines"],
+  "properties": {
+    "timelines": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["tracks"],
+        "properties": {
+          "source": { "type": "string", "default": "timeline.primary" },
+          "tracks": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/track" }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "keyframe": {
+      "type": "object",
+      "required": ["at", "value"],
+      "properties": {
+        "at": { "type": "number" },
+        "value": { "type": ["number", "string", "boolean"] },
+        "easing": { "enum": ["linear", "smoothstep", "smootherstep", "easeInOutCubic"] }
+      },
+      "additionalProperties": false
+    },
+    "track": {
+      "type": "object",
+      "required": ["target", "channel", "keyframes"],
+      "properties": {
+        "target": { "type": "string", "minLength": 1 },
+        "channel": {
+          "enum": ["opacity", "draw", "pathPosition", "attribute", "style", "translateX", "translateY", "x", "y", "scale", "rotate", "visibility"]
+        },
+        "attribute": { "type": "string" },
+        "path": { "type": "string" },
+        "unit": { "type": "string" },
+        "slot": { "type": "string" },
+        "compose": { "enum": ["replace"] },
+        "easing": { "enum": ["linear", "smoothstep", "smootherstep", "easeInOutCubic"] },
+        "keyframes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/keyframe" }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

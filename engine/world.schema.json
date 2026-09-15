@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/semantic-motion/world.schema.json",
+  "title": "Semantic Motion world specification",
+  "type": "object",
+  "required": ["world", "objects"],
+  "properties": {
+    "world": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "minScale": { "type": "number", "exclusiveMinimum": 0 },
+        "maxScale": { "type": "number", "exclusiveMinimum": 0 },
+        "initialCamera": {
+          "type": "object",
+          "required": ["x", "y", "scale"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "scale": { "type": "number", "exclusiveMinimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "objects": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["selector"],
+        "properties": {
+          "selector": { "type": "string", "minLength": 1 },
+          "lod": {
+            "type": "object",
+            "properties": {
+              "min": { "type": "number" },
+              "max": { "type": "number" },
+              "fade": { "type": "number", "minimum": 0 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}
