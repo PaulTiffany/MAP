@@ -1,19 +1,11 @@
-# Atlas implementation
+# Atlas fixture
 
-`world.json` is the semantic scene graph.
+This directory is a subject-matter fixture for the reusable interaction engine in `../engine/`.
 
-`trails.json` is the authored choreography: camera keyframes, chapters, effect ranges, and epistemic status.
+- `world.json` contains scene-specific semantic IDs and coordinates.
+- `trails.json` contains scene-specific authored choreography and evidence metadata.
+- `index.html` remains a visual experiment / migration target.
 
-`engine.js` is the generic runtime for applying those effects.
+The runtime itself does **not** live here anymore. New interaction behavior belongs in `engine/`, and generic improvements should be proven first in `engine/lab.html` before being applied to this fixture.
 
-The current `index.html` is the reference visual implementation. New art should target stable semantic IDs rather than add one-off animation callbacks.
-
-The intended authoring workflow is:
-
-1. place or replace an art object in the world;
-2. bind it to a semantic ID in `world.json`;
-3. choreograph it in `trails.json`;
-4. let the engine scrub it from trail progress;
-5. keep formal/provenance status attached to the semantic object or chapter.
-
-This lets the visual language become much richer without making the site less auditable.
+The fixture may remain visually opinionated. The engine must remain content-neutral.
