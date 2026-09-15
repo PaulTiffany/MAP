@@ -1,0 +1,71 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Semantic Motion Engine self-test</title>
+<style>body{font:14px ui-monospace,monospace;padding:24px;line-height:1.5}.ok{color:#17603f}.bad{color:#9b352e}svg{position:absolute;left:-9999px}</style>
+<h1>Semantic Motion Engine self-test</h1>
+<pre id="out"></pre>
+<svg width="400" height="300"><g id="wrapped" transform="translate(40 50)"><ellipse id="ellipse" cx="0" cy="0" rx="10" ry="20"/></g></svg>
+<script type="module">
+import { sampleKeyframes, lodAlpha } from './math.js';
+import { Camera2D } from './camera.js';
+import { SignalStore } from './state.js';
+import { TimelineSampler } from './timeline.js';
+import { SVGRenderer } from './svg-renderer.js';
+
+const out=document.querySelector('#out');let passed=0,failed=0;
+const approx=(a,b,e=1e-6)=>Math.abs(a-b)<=e;
+function test(name,fn){try{fn();passed++;out.innerHTML+=`<span class="ok">PASS</span> ${name}\n`}catch(error){failed++;out.innerHTML+=`<span class="bad">FAIL</span> ${name}: ${error.message}\n`}}
+function assert(condition,message='assertion failed'){if(!condition)throw new Error(message)}
+
+test('keyframe interpolation is deterministic',()=>{
+  const v=sampleKeyframes([{at:0,value:0},{at:1,value:10}],.25);
+  assert(approx(v,2.5),`expected 2.5, got ${v}`);
+});
+
+test('semantic LOD cross-fades at boundaries',()=>{
+  assert(approx(lodAlpha(.5,{min:.5,max:1,fade:.2}),1));
+  assert(lodAlpha(.35,{min:.5,max:1,fade:.2})>0 && lodAlpha(.35,{min:.5,max:1,fade:.2})<1);
+  assert(approx(lodAlpha(.2,{min:.5,max:1,fade:.2}),0));
+});
+
+test('pointer-centered zoom preserves world point',()=>{
+  const c=new Camera2D({x:500,y:500,scale:1,minScale:.1,maxScale:8});
+  c.setViewport(1000,800);
+  const before=c.screenToWorld(760,210);
+  c.zoomAt(760,210,2.2);
+  const after=c.screenToWorld(760,210);
+  assert(approx(before.x,after.x) && approx(before.y,after.y),`${JSON.stringify(before)} != ${JSON.stringify(after)}`);
+});
+
+test('timeline camera tracks can be sampled separately',()=>{
+  const signals=new SignalStore({'timeline.primary':.5});
+  const sampler=new TimelineSampler({timelines:{a:{source:'timeline.primary',tracks:[
+    {target:'@camera',channel:'x',keyframes:[{at:0,value:0},{at:1,value:100}]},
+    {target:'thing',channel:'opacity',keyframes:[{at:0,value:0},{at:1,value:1}]}
+  ]}}});
+  const camera=sampler.sample(signals,t=>t.target==='@camera');
+  const visual=sampler.sample(signals,t=>t.target!=='@camera');
+  assert(camera.length===1 && visual.length===1);
+  assert(approx(camera[0].value,50) && approx(visual[0].value,.5));
+});
+
+test('renderer keeps independent attribute channels',()=>{
+  const renderer=new SVGRenderer(document,{objects:{shape:{selector:'#ellipse'}}});
+  renderer.queue({target:'shape',channel:'attribute',attribute:'rx',value:42});
+  renderer.queue({target:'shape',channel:'attribute',attribute:'ry',value:67});
+  renderer.flush();
+  const e=document.querySelector('#ellipse');
+  assert(e.getAttribute('rx')==='42' && e.getAttribute('ry')==='67');
+});
+
+test('renderer preserves authored base transforms',()=>{
+  const renderer=new SVGRenderer(document,{objects:{wrapped:{selector:'#wrapped'}}});
+  renderer.queue({target:'wrapped',channel:'scale',value:1.5});
+  renderer.flush();
+  const t=document.querySelector('#wrapped').getAttribute('transform');
+  assert(t.startsWith('translate(40 50)') && t.includes('scale(1.5)'),t);
+});
+
+out.innerHTML+=`\n${passed} passed, ${failed} failed\n`;
+document.title=`${failed?'FAIL':'PASS'} — Semantic Motion Engine self-test`;
+</script>
