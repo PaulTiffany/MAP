@@ -1,4 +1,4 @@
-import { lodAlpha } from './math.js';
+import { clamp, lodAlpha } from './math.js';
 
 export class SVGRenderer {
   constructor(root, worldSpec = {}) {
@@ -6,7 +6,8 @@ export class SVGRenderer {
     this.worldSpec = worldSpec;
     this.objects = new Map();
     this.pending = new Map();
-    this.cache = new Map();
+    this.state = new Map();
+    this.elementWrites = new WeakMap();
     this.pathLengths = new WeakMap();
     this.index();
   }
@@ -26,132 +27,129 @@ export class SVGRenderer {
       target = new Map();
       this.pending.set(command.target, target);
     }
-    target.set(command.channel, command);
+    const slot = command.slot || `${command.channel}:${command.attribute || command.path || ''}`;
+    target.set(slot, command);
   }
 
   queueLOD(scale) {
     for (const [id, { spec }] of this.objects) {
-      const alpha = lodAlpha(scale, spec.lod || {});
-      this.queue({ target: id, channel: '__lodOpacity', value: alpha });
+      this.queue({ target: id, channel: '__lodOpacity', value: lodAlpha(scale, spec.lod || {}) });
     }
   }
 
   flush() {
-    for (const [id, channels] of this.pending) {
+    for (const [id, commands] of this.pending) {
       const record = this.objects.get(id);
       if (!record) continue;
       const { element } = record;
-      let state = this.cache.get(id);
-      if (!state) {
-        state = {
-          opacity: 1,
-          lodOpacity: 1,
-          tx: 0,
-          ty: 0,
-          scale: 1,
-          rotate: 0,
-          lastTransform: ''
-        };
-        this.cache.set(id, state);
-      }
+      const state = this.objectState(id);
 
-      for (const command of channels.values()) this.applyCommand(element, state, command);
+      for (const command of commands.values()) this.applyCommand(element, state, command);
 
       const composedOpacity = state.opacity * state.lodOpacity;
-      if (state.lastOpacity !== composedOpacity) {
-        element.style.opacity = String(composedOpacity);
-        state.lastOpacity = composedOpacity;
-      }
+      this.write(element, 'opacity', composedOpacity, v => element.style.opacity = String(v));
 
-      const transform = `translate(${state.tx} ${state.ty}) rotate(${state.rotate}) scale(${state.scale})`;
-      if (transform !== state.lastTransform && (state.tx || state.ty || state.rotate || state.scale !== 1 || state.lastTransform)) {
-        element.setAttribute('transform', transform);
-        state.lastTransform = transform;
+      if (state.transformDirty) {
+        const transform = `translate(${state.tx} ${state.ty}) rotate(${state.rotate}) scale(${state.scale})`;
+        this.write(element, 'transform', transform, v => element.setAttribute('transform', v));
+        state.transformDirty = false;
       }
     }
     this.pending.clear();
+  }
+
+  objectState(id) {
+    let state = this.state.get(id);
+    if (!state) {
+      state = { opacity: 1, lodOpacity: 1, tx: 0, ty: 0, scale: 1, rotate: 0, transformDirty: false };
+      this.state.set(id, state);
+    }
+    return state;
   }
 
   applyCommand(element, state, command) {
     const { channel, value } = command;
     switch (channel) {
       case '__lodOpacity':
-        state.lodOpacity = value;
+        state.lodOpacity = clamp(value);
         break;
       case 'opacity':
-        state.opacity = value;
+        state.opacity = clamp(value);
         break;
       case 'x':
       case 'translateX':
-        state.tx = value;
+        if (state.tx !== value) { state.tx = value; state.transformDirty = true; }
         break;
       case 'y':
       case 'translateY':
-        state.ty = value;
+        if (state.ty !== value) { state.ty = value; state.transformDirty = true; }
         break;
       case 'scale':
-        state.scale = value;
+        if (state.scale !== value) { state.scale = value; state.transformDirty = true; }
         break;
       case 'rotate':
-        state.rotate = value;
+        if (state.rotate !== value) { state.rotate = value; state.transformDirty = true; }
         break;
       case 'attribute':
-        if (command.attribute) this.setIfChanged(element, `attr:${command.attribute}`, value, v => element.setAttribute(command.attribute, String(v)));
+        if (command.attribute) this.write(element, `attr:${command.attribute}`, value, v => element.setAttribute(command.attribute, String(v)));
         break;
       case 'style':
-        if (command.attribute) this.setIfChanged(element, `style:${command.attribute}`, value, v => element.style[command.attribute] = `${v}${command.unit || ''}`);
+        if (command.attribute) this.write(element, `style:${command.attribute}`, value, v => element.style[command.attribute] = `${v}${command.unit || ''}`);
         break;
       case 'draw':
-        this.applyDraw(element, value);
+        this.applyDraw(element, clamp(value));
         break;
       case 'pathPosition':
-        this.applyPathPosition(element, state, command.path, value);
+        this.applyPathPosition(state, command.path, clamp(value));
         break;
       case 'visibility':
-        this.setIfChanged(element, 'visibility', Boolean(value), v => element.style.display = v ? '' : 'none');
+        this.write(element, 'visibility', Boolean(value), v => element.style.display = v ? '' : 'none');
         break;
     }
   }
 
   applyDraw(element, value) {
-    if (typeof element.getTotalLength !== 'function') return;
-    let length = this.pathLengths.get(element);
-    if (!length) {
-      try {
-        length = element.getTotalLength();
-        this.pathLengths.set(element, length);
-      } catch (_) {
-        return;
-      }
-    }
-    element.style.strokeDasharray = `${length}`;
-    element.style.strokeDashoffset = `${length * (1 - value)}`;
+    const length = this.pathLength(element);
+    if (!length) return;
+    this.write(element, 'draw:array', length, v => element.style.strokeDasharray = String(v));
+    this.write(element, 'draw:offset', length * (1 - value), v => element.style.strokeDashoffset = String(v));
   }
 
-  applyPathPosition(element, state, pathId, value) {
+  applyPathPosition(state, pathId, value) {
     const path = this.objects.get(pathId)?.element;
-    if (!path || typeof path.getTotalLength !== 'function') return;
-    let length = this.pathLengths.get(path);
-    if (!length) {
-      try {
-        length = path.getTotalLength();
-        this.pathLengths.set(path, length);
-      } catch (_) {
-        return;
-      }
-    }
+    if (!path || typeof path.getPointAtLength !== 'function') return;
+    const length = this.pathLength(path);
+    if (!length) return;
     try {
       const point = path.getPointAtLength(length * value);
-      state.tx = point.x;
-      state.ty = point.y;
+      if (state.tx !== point.x || state.ty !== point.y) {
+        state.tx = point.x;
+        state.ty = point.y;
+        state.transformDirty = true;
+      }
     } catch (_) {}
   }
 
-  setIfChanged(element, key, value, setter) {
-    const record = this.cache.get(element) || {};
-    if (Object.is(record[key], value)) return;
-    record[key] = value;
-    this.cache.set(element, record);
+  pathLength(element) {
+    if (typeof element.getTotalLength !== 'function') return 0;
+    if (this.pathLengths.has(element)) return this.pathLengths.get(element);
+    try {
+      const length = element.getTotalLength();
+      this.pathLengths.set(element, length);
+      return length;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  write(element, key, value, setter) {
+    let record = this.elementWrites.get(element);
+    if (!record) {
+      record = new Map();
+      this.elementWrites.set(element, record);
+    }
+    if (Object.is(record.get(key), value)) return;
+    record.set(key, value);
     setter(value);
   }
 }
