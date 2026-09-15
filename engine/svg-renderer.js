@@ -1,4 +1,4 @@
-import { clamp, lodAlpha } from './math.js';
+import { clamp, lodAlpha, lerp } from './math.js';
 
 export class SVGRenderer {
   constructor(root, worldSpec = {}) {
@@ -9,6 +9,7 @@ export class SVGRenderer {
     this.state = new Map();
     this.elementWrites = new WeakMap();
     this.pathLengths = new WeakMap();
+    this.pathSamples = new WeakMap();
     this.index();
   }
 
@@ -128,16 +129,36 @@ export class SVGRenderer {
   applyPathPosition(state, pathId, value) {
     const path = this.objects.get(pathId)?.element;
     if (!path || typeof path.getPointAtLength !== 'function') return;
-    const length = this.pathLength(path);
-    if (!length) return;
-    try {
-      const point = path.getPointAtLength(length * value);
-      if (state.tx !== point.x || state.ty !== point.y) {
-        state.tx = point.x;
-        state.ty = point.y;
-        state.transformDirty = true;
+    const point = this.samplePathPoint(path, value);
+    if (!point) return;
+    if (state.tx !== point.x || state.ty !== point.y) {
+      state.tx = point.x;
+      state.ty = point.y;
+      state.transformDirty = true;
+    }
+  }
+
+  samplePathPoint(path, value) {
+    let samples = this.pathSamples.get(path);
+    if (!samples) {
+      const length = this.pathLength(path);
+      if (!length) return null;
+      samples = [];
+      const count = 64;
+      try {
+        for (let i = 0; i <= count; i++) samples.push(path.getPointAtLength(length * (i / count)));
+      } catch (_) {
+        return null;
       }
-    } catch (_) {}
+      this.pathSamples.set(path, samples);
+    }
+    const scaled = clamp(value) * (samples.length - 1);
+    const aIndex = Math.floor(scaled);
+    const bIndex = Math.min(samples.length - 1, aIndex + 1);
+    const t = scaled - aIndex;
+    const a = samples[aIndex];
+    const b = samples[bIndex];
+    return { x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) };
   }
 
   pathLength(element) {
