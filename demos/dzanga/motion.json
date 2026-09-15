@@ -1,0 +1,208 @@
+{
+  "$schema": "../../engine/motion.schema.json",
+  "timelines": {
+    "journey": {
+      "source": "timeline.primary",
+      "tracks": [
+        {
+          "target": "@camera",
+          "channel": "x",
+          "keyframes": [
+            { "at": 0.00, "value": 720 },
+            { "at": 0.20, "value": 1040, "easing": "smoothstep" },
+            { "at": 0.48, "value": 1580, "easing": "smoothstep" },
+            { "at": 0.76, "value": 2210, "easing": "smoothstep" },
+            { "at": 1.00, "value": 2520, "easing": "easeInOutCubic" }
+          ]
+        },
+        {
+          "target": "@camera",
+          "channel": "y",
+          "keyframes": [
+            { "at": 0.00, "value": 1580 },
+            { "at": 0.22, "value": 1390 },
+            { "at": 0.52, "value": 1100, "easing": "smoothstep" },
+            { "at": 0.78, "value": 760, "easing": "smoothstep" },
+            { "at": 1.00, "value": 650 }
+          ]
+        },
+        {
+          "target": "@camera",
+          "channel": "scale",
+          "keyframes": [
+            { "at": 0.00, "value": 0.62 },
+            { "at": 0.30, "value": 0.82, "easing": "smoothstep" },
+            { "at": 0.64, "value": 1.02, "easing": "smoothstep" },
+            { "at": 1.00, "value": 1.24, "easing": "easeInOutCubic" }
+          ]
+        },
+        {
+          "target": "forest.river",
+          "channel": "draw",
+          "keyframes": [
+            { "at": 0.00, "value": 0.18 },
+            { "at": 0.22, "value": 1.00, "easing": "smoothstep" }
+          ]
+        },
+        {
+          "target": "forest.seed",
+          "channel": "pathPosition",
+          "path": "forest.river",
+          "keyframes": [
+            { "at": 0.00, "value": 0.02 },
+            { "at": 0.30, "value": 0.63, "easing": "smoothstep" },
+            { "at": 0.46, "value": 0.92, "easing": "smoothstep" }
+          ]
+        },
+        {
+          "target": "forest.seed",
+          "channel": "opacity",
+          "keyframes": [
+            { "at": 0.00, "value": 0.00 },
+            { "at": 0.04, "value": 1.00 },
+            { "at": 0.40, "value": 1.00 },
+            { "at": 0.48, "value": 0.00 }
+          ]
+        },
+        {
+          "target": "forest.corridor",
+          "channel": "draw",
+          "keyframes": [
+            { "at": 0.24, "value": 0.00 },
+            { "at": 0.62, "value": 1.00, "easing": "smoothstep" }
+          ]
+        },
+        {
+          "target": "forest.trace",
+          "channel": "pathPosition",
+          "path": "forest.corridor",
+          "keyframes": [
+            { "at": 0.34, "value": 0.00 },
+            { "at": 0.70, "value": 1.00, "easing": "smoothstep" }
+          ]
+        },
+        {
+          "target": "forest.trace",
+          "channel": "opacity",
+          "keyframes": [
+            { "at": 0.30, "value": 0.00 },
+            { "at": 0.38, "value": 1.00 },
+            { "at": 0.72, "value": 1.00 },
+            { "at": 0.80, "value": 0.00 }
+          ]
+        },
+        {
+          "target": "forest.mist",
+          "channel": "opacity",
+          "keyframes": [
+            { "at": 0.00, "value": 0.18 },
+            { "at": 0.38, "value": 0.68, "easing": "smoothstep" },
+            { "at": 0.64, "value": 0.78 },
+            { "at": 0.86, "value": 0.10, "easing": "smoothstep" },
+            { "at": 1.00, "value": 0.03 }
+          ]
+        },
+        {
+          "target": "forest.bai",
+          "channel": "opacity",
+          "keyframes": [
+            { "at": 0.00, "value": 0.38 },
+            { "at": 0.62, "value": 0.42 },
+            { "at": 0.84, "value": 1.00, "easing": "smoothstep" }
+          ]
+        },
+        {
+          "target": "forest.bai",
+          "channel": "scale",
+          "keyframes": [
+            { "at": 0.58, "value": 0.94 },
+            { "at": 0.88, "value": 1.03, "easing": "smoothstep" },
+            { "at": 1.00, "value": 1.00 }
+          ]
+        },
+        {
+          "target": "forest.tracks",
+          "channel": "opacity",
+          "keyframes": [
+            { "at": 0.66, "value": 0.00 },
+            { "at": 0.90, "value": 1.00, "easing": "smoothstep" }
+          ]
+        }
+      ]
+    },
+    "activity": {
+      "source": "input.activity",
+      "tracks": [
+        {
+          "target": "forest.canopyPulse",
+          "channel": "opacity",
+          "keyframes": [
+            { "at": 0.00, "value": 0.04 },
+            { "at": 1.00, "value": 0.72, "easing": "smoothstep" }
+          ]
+        },
+        {
+          "target": "forest.canopyPulse",
+          "channel": "scale",
+          "keyframes": [
+            { "at": 0.00, "value": 0.995 },
+            { "at": 1.00, "value": 1.035, "easing": "smoothstep" }
+          ]
+        },
+        {
+          "target": "forest.riverBraids",
+          "channel": "opacity",
+          "keyframes": [
+            { "at": 0.00, "value": 0.35 },
+            { "at": 1.00, "value": 0.86, "easing": "smoothstep" }
+          ]
+        }
+      ]
+    },
+    "direction": {
+      "source": "input.scrollDirection",
+      "tracks": [
+        {
+          "target": "forest.mist",
+          "channel": "translateX",
+          "keyframes": [
+            { "at": -1.00, "value": -34 },
+            { "at": 0.00, "value": 0 },
+            { "at": 1.00, "value": 34 }
+          ]
+        }
+      ]
+    },
+    "semanticDepth": {
+      "source": "camera.scale",
+      "tracks": [
+        {
+          "target": "forest.roots",
+          "channel": "draw",
+          "keyframes": [
+            { "at": 1.10, "value": 0.00 },
+            { "at": 2.10, "value": 0.78, "easing": "smoothstep" },
+            { "at": 3.20, "value": 1.00 }
+          ]
+        },
+        {
+          "target": "forest.baiMinerals",
+          "channel": "opacity",
+          "keyframes": [
+            { "at": 0.90, "value": 0.00 },
+            { "at": 1.80, "value": 0.85, "easing": "smoothstep" },
+            { "at": 2.80, "value": 1.00 }
+          ]
+        },
+        {
+          "target": "forest.fireflies",
+          "channel": "opacity",
+          "keyframes": [
+            { "at": 1.45, "value": 0.00 },
+            { "at": 2.40, "value": 1.00, "easing": "smoothstep" }
+          ]
+        }
+      ]
+    }
+  }
+}
