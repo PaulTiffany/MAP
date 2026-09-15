@@ -4,7 +4,13 @@
     "height": 2400,
     "minScale": 0.24,
     "maxScale": 5.2,
-    "initialCamera": { "x": 1800, "y": 1200, "scale": 0.36 }
+    "initialCamera": { "x": 1800, "y": 1200, "scale": 0.36 },
+    "performance": {
+      "ambientFps": 30,
+      "coarseAmbientFps": 20,
+      "disableSvgFiltersOnCoarse": true,
+      "coarseFilterSelector": "svg [filter]"
+    }
   },
   "objects": {
     "forest.macro": { "selector": "#macro", "lod": { "min": 0.24, "max": 1.05, "fade": 0.28 } },

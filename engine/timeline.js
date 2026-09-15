@@ -3,13 +3,31 @@ import { sampleKeyframes } from './math.js';
 export class TimelineSampler {
   constructor(spec = {}) {
     this.spec = spec;
+    this.timelines = Object.values(spec.timelines || {}).map(timeline => ({
+      ...timeline,
+      sourceName: timeline.source || 'timeline.primary'
+    }));
+    this.sourceNames = [...new Set(this.timelines.map(timeline => timeline.sourceName))];
+    this.lastSourceValues = new Map();
   }
 
-  sample(signals, predicate = null) {
+  changedSources(signals, force = false) {
+    const changed = new Set();
+    for (const sourceName of this.sourceNames) {
+      const value = signals.get(sourceName, 0);
+      if (force || !this.lastSourceValues.has(sourceName) || !Object.is(this.lastSourceValues.get(sourceName), value)) {
+        changed.add(sourceName);
+        this.lastSourceValues.set(sourceName, value);
+      }
+    }
+    return changed;
+  }
+
+  sample(signals, predicate = null, sourceFilter = null) {
     const commands = [];
-    for (const timeline of Object.values(this.spec.timelines || {})) {
-      const sourceName = timeline.source || 'timeline.primary';
-      const sourceValue = signals.get(sourceName, 0);
+    for (const timeline of this.timelines) {
+      if (sourceFilter && !sourceFilter.has(timeline.sourceName)) continue;
+      const sourceValue = signals.get(timeline.sourceName, 0);
       for (const track of timeline.tracks || []) {
         if (predicate && !predicate(track)) continue;
         const value = sampleKeyframes(track.keyframes || [], sourceValue, track.easing || 'linear');

@@ -22,6 +22,16 @@
             "scale": { "type": "number", "exclusiveMinimum": 0 }
           },
           "additionalProperties": false
+        },
+        "performance": {
+          "type": "object",
+          "properties": {
+            "ambientFps": { "type": "number", "minimum": 1, "maximum": 60 },
+            "coarseAmbientFps": { "type": "number", "minimum": 1, "maximum": 60 },
+            "disableSvgFiltersOnCoarse": { "type": "boolean" },
+            "coarseFilterSelector": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
