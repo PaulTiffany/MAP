@@ -1,0 +1,90 @@
+{
+  "schema_version": "0.1",
+  "name": "Mutually Assured Progress",
+  "acronym": "MAP",
+  "tagline": "Progress that transfers.",
+  "canonical_question": "Can interaction be structured so that continued mutual progress becomes the stable trajectory?",
+  "compact_interpretation": "Advantage is not enough. Progress has to transfer through the dynamics.",
+  "researcher": "Paul Carver Tiffany III",
+  "license": "CC-BY-4.0",
+  "epistemic_policy": {
+    "mechanically_proved": "Checked in a proof assistant at the cited source/ref.",
+    "formally_defined": "Defined in a formal source but not asserted here to be mechanically proved.",
+    "counterexample": "Mechanically checked construction showing a proposed implication is insufficient.",
+    "ancestral": "Earlier machinery related to MAP without retroactive MAP labeling.",
+    "compatible": "Application compatible with MAP but not established as MAP-derived.",
+    "interpretation": "Explanatory synthesis rather than a source-level theorem."
+  },
+  "claims": [
+    {
+      "id": "lean.scalar_convergence",
+      "status": "mechanically_proved",
+      "statement": "For mapShare(q,p0,n)=1-q^n(1-p0), if 0 <= q < 1 then mapShare tends to 1.",
+      "source": {
+        "repository": "PaulTiffany/sketched",
+        "commit": "4854e71ae062eb246c9bc7ee5f663c8d34104286",
+        "path": "verification/lean/ForcingAnalysis/ForcingAnalysis/Book5ConvergenceMAP.lean",
+        "theorem": "mapShare_tendsto_one"
+      }
+    },
+    {
+      "id": "lean.drift_insufficient",
+      "status": "counterexample",
+      "statement": "Strictly increasing drift alone does not force MAP population convergence.",
+      "source": {
+        "repository": "PaulTiffany/sketched",
+        "commit": "4854e71ae062eb246c9bc7ee5f663c8d34104286",
+        "path": "verification/lean/ForcingAnalysis/ForcingAnalysis/Book5ConvergenceMAP.lean",
+        "theorem": "increasing_drift_alone_does_not_force_map_convergence"
+      }
+    },
+    {
+      "id": "lean.persistent_advantage",
+      "status": "mechanically_proved",
+      "statement": "A strict positive MAP fitness advantage induces a contraction q in [0,1).",
+      "source": {
+        "repository": "PaulTiffany/sketched",
+        "commit": "4854e71ae062eb246c9bc7ee5f663c8d34104286",
+        "path": "verification/lean/ForcingAnalysis/ForcingAnalysis/Book5ConvergenceMAP.lean",
+        "objects": ["PersistentMAPAdvantage.contraction", "contraction_nonneg", "contraction_lt_one"]
+      }
+    },
+    {
+      "id": "lean.population_convergence",
+      "status": "mechanically_proved",
+      "statement": "A mutation-free MAPPopulationOrbit under PersistentMAPAdvantage converges in MAP population share to 1.",
+      "source": {
+        "repository": "PaulTiffany/sketched",
+        "commit": "4854e71ae062eb246c9bc7ee5f663c8d34104286",
+        "path": "verification/lean/ForcingAnalysis/ForcingAnalysis/Book5ConvergenceMAP.lean",
+        "theorem": "MAPPopulationOrbit.share_tendsto_one"
+      }
+    },
+    {
+      "id": "lean.inflow_counterexample",
+      "status": "counterexample",
+      "statement": "Persistent MAP fitness advantage without exclusion of non-MAP inflow does not force convergence.",
+      "source": {
+        "repository": "PaulTiffany/sketched",
+        "commit": "4854e71ae062eb246c9bc7ee5f663c8d34104286",
+        "path": "verification/lean/ForcingAnalysis/ForcingAnalysis/Book5ConvergenceMAP.lean",
+        "theorem": "MAPPopulationOrbit.fitness_gap_with_inflow_does_not_force_convergence"
+      }
+    }
+  ],
+  "lineage": [
+    {"name": "Giants / MagicBeans", "relation": "ancestral"},
+    {"name": "Giants Phase 3", "relation": "explicit_MAP"},
+    {"name": "Principia Symbolica Book V", "relation": "formal_MAP"},
+    {"name": "sketched / Book5ConvergenceMAP.lean", "relation": "mechanically_checked_MAP"}
+  ],
+  "applications": [
+    {"name": "MeTTafy", "relation": "compatible", "note": "No explicit MAP invocation established on the audited current default branch."}
+  ],
+  "navigation": {
+    "human_entry": "README.md",
+    "interactive_entry": "index.html",
+    "formal": "FORMAL.md",
+    "provenance": "PROVENANCE.md"
+  }
+}
