@@ -1,0 +1,27 @@
+{
+  "$schema": "../../engine/world.schema.json",
+  "world": {
+    "width": 3200,
+    "height": 2200,
+    "minScale": 0.28,
+    "maxScale": 4.2,
+    "initialCamera": { "x": 1550, "y": 1120, "scale": 0.48 }
+  },
+  "objects": {
+    "forest.geography": { "selector": "#geography", "lod": { "min": 0.28, "max": 1.10, "fade": 0.28 } },
+    "forest.canopy": { "selector": "#canopy", "lod": { "min": 0.30, "max": 1.65, "fade": 0.34 } },
+    "forest.canopyPulse": { "selector": "#canopy-pulse", "lod": { "min": 0.38, "max": 1.85, "fade": 0.32 } },
+    "forest.river": { "selector": "#river-main", "lod": { "min": 0.28, "max": 3.6, "fade": 0.24 } },
+    "forest.riverBraids": { "selector": "#river-braids", "lod": { "min": 0.78, "max": 3.6, "fade": 0.30 } },
+    "forest.seed": { "selector": "#seed", "lod": { "min": 0.46, "max": 3.6, "fade": 0.30 } },
+    "forest.corridor": { "selector": "#corridor", "lod": { "min": 0.62, "max": 3.6, "fade": 0.32 } },
+    "forest.trace": { "selector": "#trace", "lod": { "min": 0.72, "max": 3.6, "fade": 0.30 } },
+    "forest.mist": { "selector": "#mist", "lod": { "min": 0.40, "max": 2.20, "fade": 0.34 } },
+    "forest.bai": { "selector": "#bai", "lod": { "min": 0.38, "max": 3.8, "fade": 0.30 } },
+    "forest.baiMinerals": { "selector": "#bai-minerals", "lod": { "min": 1.05, "max": 4.2, "fade": 0.42 } },
+    "forest.tracks": { "selector": "#tracks", "lod": { "min": 1.00, "max": 4.2, "fade": 0.42 } },
+    "forest.roots": { "selector": "#roots", "lod": { "min": 1.35, "max": 4.2, "fade": 0.48 } },
+    "forest.fireflies": { "selector": "#fireflies", "lod": { "min": 1.58, "max": 4.2, "fade": 0.50 } },
+    "forest.microLabels": { "selector": "#micro-labels", "lod": { "min": 2.05, "max": 4.2, "fade": 0.55 } }
+  }
+}
