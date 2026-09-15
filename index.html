@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Mutually Assured Progress — progress that transfers.">
+<title>MAP — Mutually Assured Progress</title>
+<style>
+:root{color-scheme:dark;--bg:#090b10;--panel:#11151d;--ink:#f3f5f7;--muted:#9ba6b5;--line:#293140;--accent:#9ee6b8;--warn:#ffcf70}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -20%,#1a2533 0,#090b10 45%);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}main{width:min(940px,92vw);margin:auto;padding:8vh 0 12vh}header{text-align:center;min-height:65vh;display:grid;place-content:center}h1{font-size:clamp(3rem,10vw,7rem);line-height:.9;margin:0;letter-spacing:-.06em}h2{font-size:clamp(1.7rem,4vw,3rem);letter-spacing:-.035em;margin:.2em 0}.tag{font-size:clamp(1.4rem,4vw,2.5rem);margin:.6em 0;color:var(--accent)}.question{max-width:650px;margin:1.4em auto;color:var(--muted);font-size:1.15rem}.nav a,.button{display:inline-block;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:.65em 1em;margin:.25em}.nav a:hover,.button:hover{border-color:var(--accent)}section{margin:7rem 0}.duel{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.card,.lab{background:rgba(17,21,29,.8);border:1px solid var(--line);border-radius:22px;padding:clamp(1.2rem,4vw,2rem)}.card strong{font-size:2rem}.card p{color:var(--muted)}.arrow{text-align:center;font-size:2rem;color:var(--accent);margin:2rem}.lab{position:relative;overflow:hidden}.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.control label{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem}.control input{width:100%}canvas{width:100%;height:320px;margin-top:1.5rem;border-radius:14px;background:#0b0e14}.readout{text-align:center;font-size:1.2rem;margin:1rem 0 0}.readout b{color:var(--accent)}.small{color:var(--muted);font-size:.92rem}.truth{font-size:clamp(1.6rem,4vw,2.8rem);max-width:760px;margin:auto;text-align:center}.truth em{color:var(--accent);font-style:normal}.chain{display:flex;gap:.5rem;align-items:center;justify-content:center;flex-wrap:wrap}.node{padding:.6em .9em;border:1px solid var(--line);border-radius:999px}.chain span:not(.node){color:var(--muted)}footer{text-align:center;color:var(--muted);margin-top:8rem}.status{font-size:.8rem;border:1px solid var(--line);border-radius:999px;padding:.2em .55em;color:var(--accent)}@media(max-width:650px){.duel,.controls{grid-template-columns:1fr}header{min-height:75vh}section{margin:5rem 0}}
+</style>
+</head>
+<body><main>
+<header>
+<div><h1>MAP</h1><div class="tag">Progress that transfers.</div>
+<p class="question">We learned to stabilize competition by making destruction mutual.<br><strong>What happens when we make progress mutual?</strong></p>
+<nav class="nav"><a href="#play">See it move</a><a href="FORMAL.md">Formal theory</a><a href="PROVENANCE.md">Provenance</a><a href="map.json">For agents</a></nav></div>
+</header>
+<section>
+<div class="duel"><article class="card"><strong>MAD</strong><p>I cannot defect because you can destroy me.</p><span class="small">Stability through reciprocal threat.</span></article><article class="card"><strong>MAP</strong><p>I can progress because your progress helps preserve mine.</p><span class="small">Stability through reciprocal capacity to improve.</span></article></div>
+<div class="arrow">↓</div><p class="truth">Can continued mutual progress become the <em>stable trajectory?</em></p>
+</section>
+<section id="play"><h2>Touch the dynamics.</h2><p class="small">A visual teaching model based on the mechanically checked contraction kernel. “Leakage” is an explanatory extension showing replenishment pressure; the Lean source separately proves that advantage with inflow need not converge.</p>
+<div class="lab"><div class="controls">
+<div class="control"><label><span>MAP advantage</span><output id="advOut"></output></label><input id="adv" type="range" min="0" max="100" value="65"></div>
+<div class="control"><label><span>Transfer</span><output id="transOut"></output></label><input id="trans" type="range" min="0" max="100" value="80"></div>
+<div class="control"><label><span>Non-MAP inflow</span><output id="leakOut"></output></label><input id="leak" type="range" min="0" max="100" value="5"></div>
+</div><canvas id="chart" width="900" height="320" aria-label="MAP population share trajectory"></canvas><p class="readout" id="readout"></p></div>
+</section>
+<section><p class="truth"><strong>Advantage is not enough.</strong><br><em>Progress has to transfer through the dynamics.</em></p></section>
+<section><h2>Not just a metaphor.</h2><p>A pinned Lean development proves a MAP population convergence kernel and proves counterexamples showing what is insufficient. <span class="status">mechanically checked</span></p><div class="nav"><a href="https://github.com/PaulTiffany/sketched/blob/4854e71ae062eb246c9bc7ee5f663c8d34104286/verification/lean/ForcingAnalysis/ForcingAnalysis/Book5ConvergenceMAP.lean">Read the proof</a><a href="FORMAL.md">Claim ledger</a></div></section>
+<section><h2>One idea. Several representations.</h2><div class="chain"><span class="node">Giants</span><span>→</span><span class="node">Principia</span><span>→</span><span class="node">Lean</span><span>→</span><span class="node">Applications</span></div><p class="small" style="text-align:center">The provenance record distinguishes explicit MAP, ancestral machinery, compatible applications, and interpretation.</p></section>
+<footer><p><strong>MAD amortizes distrust.<br>MAP amortizes trustworthy cooperation.</strong></p><p>Paul Carver Tiffany III · <a style="color:inherit" href="LICENSE">CC BY 4.0</a></p></footer>
+</main>
+<script>
+const A=document.querySelector('#adv'),T=document.querySelector('#trans'),L=document.querySelector('#leak'),C=document.querySelector('#chart'),ctx=C.getContext('2d');
+function draw(){const a=+A.value/100,t=+T.value/100,l=+L.value/100;advOut.value=Math.round(a*100)+'%';transOut.value=Math.round(t*100)+'%';leakOut.value=Math.round(l*100)+'%';let p=.18,pts=[p];for(let n=0;n<40;n++){const effective=a*t;const q=1-.82*effective;p=1-q*(1-p);p=p*(1-.45*l);p=Math.max(0,Math.min(1,p));pts.push(p)}ctx.clearRect(0,0,C.width,C.height);ctx.strokeStyle='#293140';ctx.lineWidth=1;for(let i=0;i<=4;i++){let y=20+i*70;ctx.beginPath();ctx.moveTo(35,y);ctx.lineTo(880,y);ctx.stroke()}ctx.strokeStyle='#9ee6b8';ctx.lineWidth=4;ctx.beginPath();pts.forEach((v,i)=>{let x=35+i*(845/(pts.length-1)),y=300-v*280;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();const end=pts.at(-1);readout.innerHTML=end>.9?'MAP share approaches <b>dominance</b>.':end>.55?'Progress transfers, but <b>leaks</b>.':'Advantage exists, but <b>does not propagate</b>.'} [A,T,L].forEach(x=>x.addEventListener('input',draw));draw();
+</script></body></html>
