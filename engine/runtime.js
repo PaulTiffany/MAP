@@ -28,9 +28,15 @@ export class SemanticMotionRuntime {
     this.timeOrigin = performance.now();
     this.ambientDue = this.usesTime;
     this.ambientTimer = 0;
-    this.ambientFrameMs = 1000 / (this.coarsePointer ? 20 : 30);
+    this.disabledFilters = [];
 
     const world = this.worldSpec.world || {};
+    this.performanceProfile = world.performance || {};
+    const ambientFps = this.coarsePointer
+      ? (this.performanceProfile.coarseAmbientFps ?? 20)
+      : (this.performanceProfile.ambientFps ?? 30);
+    this.ambientFrameMs = 1000 / Math.max(1, ambientFps);
+
     this.camera = new Camera2D({
       x: world.initialCamera?.x ?? (world.width || 1000) / 2,
       y: world.initialCamera?.y ?? (world.height || 1000) / 2,
@@ -61,6 +67,7 @@ export class SemanticMotionRuntime {
     });
     this.timeline = new TimelineSampler(this.motionSpec);
     this.renderer = new SVGRenderer(sceneRoot, this.worldSpec);
+    this.applyPerformanceProfile(sceneRoot);
     this.scheduler = new FrameScheduler(this.frame);
     this.input = new InputController(viewport, this.handleIntent);
     this.resizeObserver = new ResizeObserver(this.resize);
@@ -70,6 +77,17 @@ export class SemanticMotionRuntime {
     this.resize();
     this.scheduler.invalidate();
     this.scheduleAmbientTick();
+  }
+
+  applyPerformanceProfile(root) {
+    if (!this.coarsePointer || !this.performanceProfile.disableSvgFiltersOnCoarse) return;
+    const selector = this.performanceProfile.coarseFilterSelector || 'svg [filter]';
+    for (const element of root.querySelectorAll(selector)) {
+      const filter = element.getAttribute('filter');
+      if (!filter) continue;
+      this.disabledFilters.push([element, filter]);
+      element.removeAttribute('filter');
+    }
   }
 
   setMode(mode) {
@@ -272,5 +290,7 @@ export class SemanticMotionRuntime {
     if (this.ambientTimer) clearTimeout(this.ambientTimer);
     this.ambientTimer = 0;
     if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', this.visibilityHandler);
+    for (const [element, filter] of this.disabledFilters) element.setAttribute('filter', filter);
+    this.disabledFilters = [];
   }
 }
