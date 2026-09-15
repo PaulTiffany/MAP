@@ -19,10 +19,16 @@ export class SemanticMotionRuntime {
     this.scrollSensitivity = 0.0012;
     this.dragSensitivity = 0.0024;
     this.lastWorldTransform = '';
+    this.lastLODScale = NaN;
+    this.forceTimelineSample = true;
     this.reducedMotion = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.coarsePointer = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
     this.usesTime = !this.reducedMotion && Object.values(this.motionSpec.timelines || {})
       .some(timeline => String(timeline.source || '').startsWith('time.'));
     this.timeOrigin = performance.now();
+    this.ambientDue = this.usesTime;
+    this.ambientTimer = 0;
+    this.ambientFrameMs = 1000 / (this.coarsePointer ? 20 : 30);
 
     const world = this.worldSpec.world || {};
     this.camera = new Camera2D({
@@ -59,8 +65,11 @@ export class SemanticMotionRuntime {
     this.input = new InputController(viewport, this.handleIntent);
     this.resizeObserver = new ResizeObserver(this.resize);
     this.resizeObserver.observe(viewport);
+    this.visibilityHandler = this.handleVisibility;
+    if (typeof document !== 'undefined') document.addEventListener('visibilitychange', this.visibilityHandler);
     this.resize();
     this.scheduler.invalidate();
+    this.scheduleAmbientTick();
   }
 
   setMode(mode) {
@@ -69,6 +78,7 @@ export class SemanticMotionRuntime {
     this.guide = this.camera.snapshot();
     this.userView = { dx: 0, dy: 0, zoom: 1 };
     this.mode = mode;
+    this.forceTimelineSample = true;
     this.scheduler.invalidate();
   }
 
@@ -85,6 +95,7 @@ export class SemanticMotionRuntime {
   resize = () => {
     const rect = this.viewport.getBoundingClientRect();
     this.camera.setViewport(rect.width, rect.height);
+    this.forceTimelineSample = true;
     this.scheduler.invalidate();
   };
 
@@ -141,12 +152,37 @@ export class SemanticMotionRuntime {
     });
   }
 
+  scheduleAmbientTick() {
+    if (!this.usesTime || this.ambientTimer || (typeof document !== 'undefined' && document.hidden)) return;
+    this.ambientTimer = setTimeout(() => {
+      this.ambientTimer = 0;
+      this.ambientDue = true;
+      this.scheduler.invalidate();
+      this.scheduleAmbientTick();
+    }, this.ambientFrameMs);
+  }
+
+  handleVisibility = () => {
+    if (typeof document === 'undefined') return;
+    if (document.hidden) {
+      if (this.ambientTimer) clearTimeout(this.ambientTimer);
+      this.ambientTimer = 0;
+      return;
+    }
+    const previousSeconds = this.signals.get('time.seconds', 0);
+    this.timeOrigin = performance.now() - previousSeconds * 1000;
+    this.ambientDue = true;
+    this.scheduler.invalidate();
+    this.scheduleAmbientTick();
+  };
+
   updateTime(now) {
-    if (!this.usesTime) return;
+    if (!this.usesTime || !this.ambientDue) return false;
+    this.ambientDue = false;
     const seconds = (now - this.timeOrigin) / 1000;
     const loop = period => (seconds % period) / period;
     const sine = period => (Math.sin((seconds / period) * Math.PI * 2) + 1) / 2;
-    this.signals.patch({
+    return this.signals.patch({
       'time.seconds': seconds,
       'time.loopFast': loop(9),
       'time.loopSlow': loop(24),
@@ -167,9 +203,17 @@ export class SemanticMotionRuntime {
       'input.activity': Math.min(1, Math.abs(velocity) / 120)
     });
 
+    let changedSources = this.timeline.changedSources(this.signals, this.forceTimelineSample);
+
     if (this.mode === 'timeline') {
-      const cameraCommands = this.timeline.sample(this.signals, track => track.target === '@camera');
-      for (const command of cameraCommands) this.applyGuideCommand(command);
+      if (this.forceTimelineSample || changedSources.has('timeline.primary')) {
+        const cameraCommands = this.timeline.sample(
+          this.signals,
+          track => track.target === '@camera',
+          changedSources
+        );
+        for (const command of cameraCommands) this.applyGuideCommand(command);
+      }
       this.composeGuidedCamera();
     }
 
@@ -180,9 +224,20 @@ export class SemanticMotionRuntime {
       'camera.userZoom': this.userView.zoom
     });
 
-    const visualCommands = this.timeline.sample(this.signals, track => track.target !== '@camera');
+    const cameraSignalChanges = this.timeline.changedSources(this.signals);
+    if (cameraSignalChanges.size) changedSources = new Set([...changedSources, ...cameraSignalChanges]);
+
+    const visualCommands = this.timeline.sample(
+      this.signals,
+      track => track.target !== '@camera',
+      changedSources
+    );
     for (const command of visualCommands) this.renderer.queue(command);
-    this.renderer.queueLOD(this.camera.scale);
+
+    if (this.forceTimelineSample || !Object.is(this.lastLODScale, this.camera.scale)) {
+      this.renderer.queueLOD(this.camera.scale);
+      this.lastLODScale = this.camera.scale;
+    }
     this.renderer.flush();
 
     const transform = this.camera.cssTransform();
@@ -192,7 +247,8 @@ export class SemanticMotionRuntime {
       this.lastWorldTransform = transform;
     }
 
-    return velocity !== 0 || this.usesTime;
+    this.forceTimelineSample = false;
+    return velocity !== 0;
   };
 
   applyGuideCommand(command) {
@@ -213,5 +269,8 @@ export class SemanticMotionRuntime {
     this.input.destroy();
     this.resizeObserver.disconnect();
     this.scheduler.stop();
+    if (this.ambientTimer) clearTimeout(this.ambientTimer);
+    this.ambientTimer = 0;
+    if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
 }
