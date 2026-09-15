@@ -42,7 +42,7 @@ export class SVGRenderer {
       const record = this.objects.get(id);
       if (!record) continue;
       const { element } = record;
-      const state = this.objectState(id);
+      const state = this.objectState(id, element);
 
       for (const command of commands.values()) this.applyCommand(element, state, command);
 
@@ -50,7 +50,8 @@ export class SVGRenderer {
       this.write(element, 'opacity', composedOpacity, v => element.style.opacity = String(v));
 
       if (state.transformDirty) {
-        const transform = `translate(${state.tx} ${state.ty}) rotate(${state.rotate}) scale(${state.scale})`;
+        const runtimeTransform = `translate(${state.tx} ${state.ty}) rotate(${state.rotate}) scale(${state.scale})`;
+        const transform = `${state.baseTransform} ${runtimeTransform}`.trim();
         this.write(element, 'transform', transform, v => element.setAttribute('transform', v));
         state.transformDirty = false;
       }
@@ -58,10 +59,19 @@ export class SVGRenderer {
     this.pending.clear();
   }
 
-  objectState(id) {
+  objectState(id, element) {
     let state = this.state.get(id);
     if (!state) {
-      state = { opacity: 1, lodOpacity: 1, tx: 0, ty: 0, scale: 1, rotate: 0, transformDirty: false };
+      state = {
+        opacity: 1,
+        lodOpacity: 1,
+        tx: 0,
+        ty: 0,
+        scale: 1,
+        rotate: 0,
+        baseTransform: element.getAttribute('transform') || '',
+        transformDirty: false
+      };
       this.state.set(id, state);
     }
     return state;
