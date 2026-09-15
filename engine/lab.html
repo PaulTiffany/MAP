@@ -32,7 +32,7 @@ svg{display:block;width:2400px;height:1600px}
       </g>
 
       <g id="traveler-wrap"><circle id="traveler" cx="0" cy="0" r="22" fill="#b58a35"/></g>
-      <g id="velocity-pulse"><circle cx="1200" cy="760" r="180" fill="none" stroke="#9a4c42" stroke-width="10" opacity=".8"/></g>
+      <g id="velocity-pulse" transform="translate(1200 760)"><circle cx="0" cy="0" r="180" fill="none" stroke="#9a4c42" stroke-width="10" opacity=".8"/></g>
 
       <g id="detail-layer">
         <text x="820" y="520" font-size="38" font-family="Georgia,serif">A</text>
@@ -45,7 +45,7 @@ svg{display:block;width:2400px;height:1600px}
 </div>
 <div class="hud"><b>Semantic Motion Engine Lab</b><br><span id="readout">—</span></div>
 <div class="controls"><button id="free" class="active">Free roam</button><button id="timeline">Timeline</button></div>
-<div class="legend">Free roam: drag/pan, pinch or ctrl-wheel zoom. Timeline: wheel/drag scrubs a camera path and graphic choreography. Zoom independently controls semantic level-of-detail.</div>
+<div class="legend">Free roam: drag/pan, pinch or ctrl-wheel zoom. Timeline: wheel/drag scrubs a camera path and graphic choreography. Pinch/ctrl-wheel remains a separate semantic-zoom layer on top of the guided camera.</div>
 <script type="module">
 import { SemanticMotionRuntime } from './runtime.js';
 
@@ -91,7 +91,7 @@ const free=document.querySelector('#free');
 const timeline=document.querySelector('#timeline');
 function setMode(mode){runtime.setMode(mode);free.classList.toggle('active',mode==='free');timeline.classList.toggle('active',mode==='timeline')}
 free.onclick=()=>setMode('free');timeline.onclick=()=>setMode('timeline');
-function hud(){const c=runtime.camera.snapshot();readout.textContent=`mode ${runtime.mode} · zoom ${c.scale.toFixed(2)}× · progress ${runtime.signals.get('timeline.primary').toFixed(3)} · activity ${runtime.signals.get('input.activity').toFixed(2)}`;requestAnimationFrame(hud)}hud();
+function hud(){const c=runtime.camera.snapshot();readout.textContent=`mode ${runtime.mode} · zoom ${c.scale.toFixed(2)}× · user zoom ${runtime.signals.get('camera.userZoom').toFixed(2)}× · progress ${runtime.signals.get('timeline.primary').toFixed(3)} · activity ${runtime.signals.get('input.activity').toFixed(2)}`;requestAnimationFrame(hud)}hud();
 window.runtime=runtime;
 </script>
 </body>
