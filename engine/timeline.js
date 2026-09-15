@@ -5,12 +5,13 @@ export class TimelineSampler {
     this.spec = spec;
   }
 
-  sample(signals) {
+  sample(signals, predicate = null) {
     const commands = [];
     for (const timeline of Object.values(this.spec.timelines || {})) {
       const sourceName = timeline.source || 'timeline.primary';
       const sourceValue = signals.get(sourceName, 0);
       for (const track of timeline.tracks || []) {
+        if (predicate && !predicate(track)) continue;
         const value = sampleKeyframes(track.keyframes || [], sourceValue, track.easing || 'linear');
         if (value === undefined) continue;
         commands.push({
@@ -20,7 +21,8 @@ export class TimelineSampler {
           attribute: track.attribute,
           path: track.path,
           unit: track.unit || '',
-          compose: track.compose || 'replace'
+          compose: track.compose || 'replace',
+          slot: track.slot
         });
       }
     }
