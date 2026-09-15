@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+<meta name="description" content="A semantic-motion rainforest study inspired by the Dzanga-Sangha landscape of the northwestern Congo Basin.">
+<title>Dzanga — semantic rainforest study</title>
+<style>
+:root{
+  --night:#0e1d18;--deep:#163429;--canopy:#24513d;--leaf:#3d6b4d;--young:#7f9651;
+  --water:#668f92;--water2:#9ab9b4;--mist:#d3ddd4;--clay:#aa805d;--bai:#d7c79b;
+  --mineral:#eee1b5;--ink:#14211b;--paper:#e9e4d4;--amber:#d5a347;
+}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--night)}
+body{font-family:ui-sans-serif,system-ui,sans-serif;touch-action:none;color:var(--paper)}
+button{font:inherit}
+#viewport{position:fixed;inset:0;overflow:hidden;cursor:grab;background:radial-gradient(circle at 74% 26%,#33533f 0,#132b23 42%,#0b1714 100%)}
+#viewport:active{cursor:grabbing}
+#world{position:absolute;left:0;top:0;width:3200px;height:2200px;will-change:transform;transform-origin:0 0}
+#scene{display:block;width:3200px;height:2200px;overflow:visible}
+#chrome{position:fixed;inset:0;pointer-events:none;z-index:10}
+.brand{position:absolute;left:18px;top:16px;max-width:min(520px,72vw)}
+.brand b{display:block;font:700 11px ui-sans-serif,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+.brand span{display:block;margin-top:5px;font:500 clamp(18px,2.2vw,30px) Georgia,serif;line-height:1.05}
+.brand small{display:block;margin-top:8px;color:#c4cbbc;font-size:10px;line-height:1.45;max-width:420px}
+.controls{position:absolute;right:16px;top:16px;display:flex;gap:7px;pointer-events:auto}
+.controls button{border:1px solid rgba(233,228,212,.8);background:rgba(14,29,24,.72);color:var(--paper);padding:9px 11px;cursor:pointer;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.controls button.active{background:var(--paper);color:var(--ink)}
+.hint{position:absolute;left:18px;bottom:16px;font-size:10px;line-height:1.45;color:#bcc8bd;max-width:420px}
+.depth{position:absolute;right:18px;bottom:18px;text-align:right;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#b8c4b8}
+.depth i{display:inline-block;width:48px;border-top:1px solid #b8c4b8;margin:0 7px 3px}
+.label{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase}
+@media(max-width:720px){.brand small,.depth{display:none}.brand span{font-size:20px}.controls{top:auto;bottom:14px}.hint{bottom:70px;max-width:62vw}}
+@media(prefers-reduced-motion:reduce){#canopy-pulse{display:none}}
+</style>
+</head>
+<body>
+<div id="viewport" aria-label="Interactive Congo Basin inspired rainforest surface">
+  <div id="world">
+    <svg id="scene" viewBox="0 0 3200 2200" role="img" aria-labelledby="title desc">
+      <title id="title">Dzanga semantic rainforest study</title>
+      <desc id="desc">An abstract illustrated rainforest with river, dense canopy, animal corridor, mist, a mineral clearing, tracks, root systems and tiny lights. Scroll scrubs a guided route; zoom reveals semantic depth.</desc>
+      <defs>
+        <pattern id="grain" width="46" height="46" patternUnits="userSpaceOnUse"><circle cx="6" cy="8" r="1.4" fill="#d8dfcf" opacity=".055"/><circle cx="31" cy="22" r="1" fill="#d8dfcf" opacity=".04"/></pattern>
+        <radialGradient id="crown" cx="42%" cy="36%"><stop offset="0" stop-color="#557957"/><stop offset=".62" stop-color="#315f45"/><stop offset="1" stop-color="#1a3c31"/></radialGradient>
+        <radialGradient id="crownYoung"><stop offset="0" stop-color="#9aad68"/><stop offset="1" stop-color="#486c48"/></radialGradient>
+        <linearGradient id="riverGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#91b0aa"/><stop offset=".6" stop-color="#557f83"/><stop offset="1" stop-color="#345c65"/></linearGradient>
+        <radialGradient id="baiGrad"><stop offset="0" stop-color="#f0dfac"/><stop offset=".62" stop-color="#d0bd8c"/><stop offset="1" stop-color="#9a7659"/></radialGradient>
+        <symbol id="c" viewBox="-70 -70 140 140"><path d="M-60 8C-67-27-40-57-6-59C25-72 61-50 62-17C78 12 56 50 24 54C-4 72-46 59-53 29C-68 24-72 16-60 8Z" fill="url(#crown)" stroke="#102b23" stroke-width="4"/></symbol>
+        <symbol id="cy" viewBox="-60 -60 120 120"><path d="M-49 2C-58-27-31-51-4-48C17-63 50-41 47-14C66 11 43 43 18 43C-10 59-48 42-47 17C-58 13-59 8-49 2Z" fill="url(#crownYoung)" stroke="#17382d" stroke-width="3"/></symbol>
+        <symbol id="track" viewBox="-18 -28 36 56"><ellipse cy="-10" rx="11" ry="16" fill="#5f4b3a" opacity=".65"/><ellipse cx="-10" cy="10" rx="5" ry="9" fill="#5f4b3a" opacity=".55"/><ellipse cx="10" cy="10" rx="5" ry="9" fill="#5f4b3a" opacity=".55"/></symbol>
+      </defs>
+
+      <rect width="3200" height="2200" fill="#10241d"/>
+      <rect width="3200" height="2200" fill="url(#grain)"/>
+
+      <g id="geography">
+        <path d="M0 1790C370 1640 470 1860 810 1660C1060 1510 1140 1270 1450 1260C1700 1250 1810 1510 2110 1410C2440 1300 2600 930 3200 970V2200H0Z" fill="#17382d" opacity=".88"/>
+        <path d="M0 250C580 80 970 310 1390 190C1830 60 2240 210 2700 90C2900 40 3060 70 3200 100V0H0Z" fill="#214333" opacity=".82"/>
+        <path d="M2480 350C2780 240 3070 330 3200 510V890C3000 780 2720 810 2500 680C2390 610 2360 470 2480 350Z" fill="#31503e" opacity=".64"/>
+      </g>
+
+      <path id="river-main" d="M-120 1880C260 1710 430 1940 770 1710C1030 1530 1070 1350 1320 1280C1590 1200 1760 1370 1970 1250C2200 1120 2280 900 2500 790C2740 670 2940 710 3320 470" fill="none" stroke="url(#riverGrad)" stroke-width="170" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
+      <g id="river-braids" fill="none" stroke="#b6cbc4" stroke-linecap="round">
+        <path d="M270 1760C510 1660 650 1740 850 1580" stroke-width="12"/><path d="M1050 1390C1260 1310 1430 1370 1590 1260" stroke-width="9"/><path d="M2050 1160C2240 1030 2360 900 2500 840" stroke-width="8"/><path d="M2550 760C2770 660 2920 650 3060 560" stroke-width="7"/>
+      </g>
+
+      <g id="canopy">
+        <use href="#c" x="330" y="470" width="260" height="260"/><use href="#c" x="560" y="380" width="320" height="320"/><use href="#cy" x="880" y="470" width="240" height="240"/>
+        <use href="#c" x="1110" y="350" width="330" height="330"/><use href="#c" x="1420" y="410" width="280" height="280"/><use href="#c" x="1690" y="310" width="350" height="350"/>
+        <use href="#cy" x="2020" y="470" width="250" height="250"/><use href="#c" x="2200" y="330" width="330" height="330"/><use href="#c" x="440" y="760" width="340" height="340"/>
+        <use href="#c" x="790" y="720" width="300" height="300"/><use href="#c" x="1050" y="680" width="360" height="360"/><use href="#cy" x="1370" y="760" width="230" height="230"/>
+        <use href="#c" x="1570" y="680" width="370" height="370"/><use href="#c" x="1890" y="720" width="330" height="330"/><use href="#c" x="520" y="1100" width="330" height="330"/>
+        <use href="#cy" x="820" y="1030" width="250" height="250"/><use href="#c" x="1080" y="980" width="350" height="350"/><use href="#c" x="1440" y="1030" width="320" height="320"/>
+        <use href="#c" x="1770" y="980" width="360" height="360"/><use href="#c" x="2080" y="1020" width="320" height="320"/><use href="#cy" x="620" y="1410" width="240" height="240"/>
+        <use href="#c" x="900" y="1380" width="330" height="330"/><use href="#c" x="1260" y="1370" width="340" height="340"/><use href="#c" x="1660" y="1390" width="330" height="330"/>
+        <use href="#c" x="1980" y="1370" width="350" height="350"/>
+      </g>
+
+      <g id="canopy-pulse" transform="translate(1540 1080)" fill="none" stroke="#a4b97a" stroke-width="11" opacity=".18">
+        <ellipse rx="630" ry="490"/><ellipse rx="790" ry="610" opacity=".44"/><ellipse rx="970" ry="730" opacity=".18"/>
+      </g>
+
+      <path id="corridor" d="M1160 1530C1270 1390 1390 1300 1510 1190C1670 1040 1780 930 1940 870C2100 810 2210 720 2380 640" fill="none" stroke="#d1b672" stroke-width="34" stroke-linecap="round" stroke-dasharray="4 38" opacity=".88"/>
+      <g id="trace"><circle r="22" fill="#e6bf58"/><circle r="48" fill="none" stroke="#e6bf58" stroke-width="5" opacity=".38"/></g>
+      <g id="seed"><path d="M0-20C20-12 27 4 12 20C-4 32-20 20-17 3C-14-10-7-18 0-20Z" fill="#d5b45c" stroke="#624d2e" stroke-width="3"/><path d="M-1-13L8 16" stroke="#624d2e" stroke-width="2"/></g>
+
+      <g id="mist" fill="none" stroke="#d4ded4" stroke-linecap="round">
+        <path d="M1050 950C1320 830 1550 980 1810 860C2020 770 2230 800 2450 700" stroke-width="88" opacity=".16"/>
+        <path d="M990 1080C1280 940 1530 1110 1840 980C2070 880 2280 900 2510 800" stroke-width="52" opacity=".22"/>
+        <path d="M1160 820C1430 730 1690 830 1970 720" stroke-width="34" opacity=".18"/>
+      </g>
+
+      <g id="bai" transform="translate(2480 610)">
+        <path d="M-390-160C-260-300 10-330 250-250C430-190 520-30 450 150C375 350 120 430-120 390C-355 350-510 220-500 35C-495-45-455-110-390-160Z" fill="url(#baiGrad)" stroke="#513d31" stroke-width="9"/>
+        <path d="M-300 110C-160 20-20 60 100-5C210-65 300-40 385 20" fill="none" stroke="#8fb1ad" stroke-width="36" stroke-linecap="round" opacity=".78"/>
+        <path d="M-380-30C-270-110-175-95-95-160M250 145C310 95 350 80 415 85" fill="none" stroke="#eee0aa" stroke-width="12" stroke-linecap="round" opacity=".76"/>
+      </g>
+
+      <g id="bai-minerals" transform="translate(2480 610)" fill="none" stroke="#fff0b8" stroke-linecap="round">
+        <path d="M-245 190C-160 120-85 135-10 82C75 20 155 52 220-10" stroke-width="7"/><path d="M-185 245C-95 190 5 205 85 155C160 110 225 118 300 68" stroke-width="4" opacity=".74"/>
+        <circle cx="-120" cy="55" r="22" stroke-width="5"/><circle cx="158" cy="130" r="15" stroke-width="4"/><circle cx="250" cy="-95" r="18" stroke-width="4"/>
+      </g>
+
+      <g id="tracks" transform="translate(2200 900)">
+        <use href="#track" x="0" y="0" width="46" height="70" transform="rotate(-26)"/><use href="#track" x="120" y="-85" width="42" height="66" transform="rotate(-18)"/>
+        <use href="#track" x="250" y="-135" width="48" height="74" transform="rotate(-10)"/><use href="#track" x="390" y="-160" width="44" height="70" transform="rotate(-2)"/>
+      </g>
+
+      <path id="roots" d="M1540 1160C1450 1270 1360 1370 1190 1460M1540 1160C1650 1300 1800 1360 1980 1480M1540 1160C1480 990 1370 900 1240 810M1540 1160C1690 1030 1810 980 2010 900M1980 1480C2160 1490 2290 1390 2460 1300M1190 1460C1040 1510 930 1590 820 1740M2010 900C2160 820 2290 760 2450 700" fill="none" stroke="#7eb7a1" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity=".74"/>
+
+      <g id="fireflies" fill="#d7c96a">
+        <circle cx="1310" cy="1220" r="7"/><circle cx="1380" cy="1090" r="5"/><circle cx="1510" cy="1320" r="6"/><circle cx="1660" cy="1180" r="5"/><circle cx="1770" cy="1040" r="7"/>
+        <circle cx="1910" cy="1280" r="5"/><circle cx="2110" cy="980" r="6"/><circle cx="2280" cy="810" r="5"/><circle cx="2440" cy="740" r="6"/>
+      </g>
+
+      <g id="micro-labels" fill="#d7dfd1" font-family="ui-sans-serif,system-ui,sans-serif" font-size="22" letter-spacing="3">
+        <text x="1010" y="1700">WATER / TRACE</text><text x="1450" y="1510">ROOT EXCHANGE</text><text x="2380" y="1170">MINERAL CLEARING</text>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<div id="chrome">
+  <div class="brand"><b>Semantic Motion Engine · field study 01</b><span>Dzanga — a living rainforest surface</span><small>Inspired by the Sangha Trinational / Dzanga-Sangha landscape. Forest systems only; no claim of representing BaAka cosmology or art.</small></div>
+  <div class="controls"><button id="guided" class="active">Guided trail</button><button id="free">Free roam</button><button id="minus" aria-label="Zoom out">−</button><button id="plus" aria-label="Zoom in">+</button></div>
+  <div class="hint">Guided: scroll or drag vertically to move river → canopy → corridor → bai; pinch / ctrl-wheel still changes semantic depth. Free roam: drag/pan and zoom anywhere.</div>
+  <div class="depth">geography <i></i> relations <i></i> mechanisms <i></i> micro</div>
+</div>
+
+<script type="module">
+import { SemanticMotionRuntime } from '../../engine/runtime.js';
+
+const [worldSpec,motionSpec]=await Promise.all([
+  fetch('./world.json').then(r=>r.json()),
+  fetch('./motion.json').then(r=>r.json())
+]);
+const viewport=document.querySelector('#viewport');
+const runtime=new SemanticMotionRuntime({
+  viewport,
+  worldElement:document.querySelector('#world'),
+  sceneRoot:document,
+  worldSpec,
+  motionSpec,
+  mode:'timeline'
+});
+runtime.setProgress(0);
+const guided=document.querySelector('#guided'),free=document.querySelector('#free');
+function setMode(mode){runtime.setMode(mode);guided.classList.toggle('active',mode==='timeline');free.classList.toggle('active',mode==='free')}
+guided.onclick=()=>setMode('timeline');
+free.onclick=()=>setMode('free');
+document.querySelector('#plus').onclick=()=>runtime.handleIntent({type:'zoom',x:innerWidth/2,y:innerHeight/2,factor:1.24,rawDelta:-80});
+document.querySelector('#minus').onclick=()=>runtime.handleIntent({type:'zoom',x:innerWidth/2,y:innerHeight/2,factor:.81,rawDelta:80});
+addEventListener('keydown',e=>{if(e.key==='g')setMode('timeline');if(e.key==='f')setMode('free');if(e.key==='Home'){setMode('timeline');runtime.setProgress(0)}});
+window.runtime=runtime;
+</script>
+</body>
+</html>
