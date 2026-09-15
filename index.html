@@ -3,307 +3,161 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
-<meta name="description" content="Mutually Assured Progress as a semantic-zoom conceptual world.">
-<title>MAP — semantic zoom atlas</title>
+<meta name="description" content="Mutually Assured Progress as a living semantic atlas.">
+<title>MAP — living semantic atlas</title>
 <style>
-:root{--paper:#f3efe4;--ink:#171915;--muted:#6d6d64;--rule:#c8c1b2;--map:#24604b;--mad:#97493f;--gold:#b18a34;--blue:#527687;--soft:#ddd6c8}
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--paper);color:var(--ink)}
-body{font-family:Georgia,'Times New Roman',serif;touch-action:none}
-button,input{font:inherit}
-#viewport{position:fixed;inset:0;overflow:hidden;cursor:grab;background:radial-gradient(circle at 50% 50%,#f8f5ed 0,var(--paper) 58%,#ebe5d9 100%)}
-#viewport.dragging{cursor:grabbing}
-#world{position:absolute;left:0;top:0;width:5000px;height:5000px;transform-origin:0 0;will-change:transform;user-select:none;-webkit-user-select:none}
-svg{display:block;width:5000px;height:5000px;overflow:visible}
-.semantic{will-change:opacity}
-.cart-label{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.13em;text-transform:uppercase;font-weight:700}
-.serif{font-family:Georgia,'Times New Roman',serif}
-.region-hit{cursor:pointer;fill:transparent}
-.region-title{cursor:pointer}
-.world-link{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:underline;cursor:pointer}
-.embedded{font-family:ui-sans-serif,system-ui,sans-serif;background:rgba(243,239,228,.92);border:1px solid #171915;padding:18px;width:100%;height:100%;color:#171915;user-select:text;-webkit-user-select:text}
-.embedded h3{font-family:Georgia,'Times New Roman',serif;font-size:26px;font-weight:500;margin:0 0 8px}
-.embedded p{font-size:13px;line-height:1.45;margin:0 0 12px;color:#55584f}
-.embedded label{display:flex;justify-content:space-between;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-.embedded input{width:100%;accent-color:var(--map)}
-.embedded svg{width:100%;height:130px;margin-top:8px}
-#chrome{position:fixed;inset:0;z-index:20;pointer-events:none;font-family:ui-sans-serif,system-ui,sans-serif}
-#brand{position:absolute;left:18px;top:16px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-#readout{position:absolute;right:18px;top:14px;text-align:right;font-size:11px;color:var(--muted);line-height:1.45}
-#readout b{color:var(--ink);font-weight:700}
-#controls{position:absolute;right:16px;bottom:16px;display:flex;gap:7px;pointer-events:auto}
-#controls button{width:42px;height:42px;border:1px solid var(--ink);background:rgba(243,239,228,.9);color:var(--ink);cursor:pointer;font-family:ui-sans-serif,system-ui,sans-serif;font-size:18px}
-#controls button:hover,#controls button:focus{background:var(--ink);color:var(--paper)}
-#depth{position:absolute;left:18px;bottom:18px;width:150px}
-#depth .track{height:1px;background:var(--rule);position:relative;margin:7px 0}
-#depth .track i{position:absolute;left:0;top:-2px;width:5px;height:5px;border-radius:50%;background:var(--ink);transform:translateX(0)}
-#depth .labels{display:flex;justify-content:space-between;font-size:8px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-#hint{position:absolute;left:50%;bottom:17px;transform:translateX(-50%);font-size:10px;color:var(--muted);letter-spacing:.04em;white-space:nowrap}
-#crumb{position:absolute;left:50%;top:15px;transform:translateX(-50%);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-@media(max-width:700px){#brand{font-size:9px;max-width:160px}#readout{font-size:9px}#hint{display:none}#depth{width:110px}.embedded{padding:12px}.embedded h3{font-size:21px}}
-@media(prefers-reduced-motion:reduce){#world{will-change:auto}}
+:root{--paper:#efe8d8;--ink:#171915;--muted:#6f6b60;--rule:#b8ad98;--map:#245f49;--map2:#6f9b78;--mad:#934b42;--gold:#b18a34;--blue:#537b8b;--water:#c9d7d5;--land:#e7dcc5;--land2:#ddd0b3;--mount:#9a8d78}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--paper);color:var(--ink)}body{font-family:Georgia,'Times New Roman',serif;touch-action:none}button,input{font:inherit}
+#viewport{position:fixed;inset:0;overflow:hidden;cursor:grab;background:radial-gradient(circle at 50% 48%,#f8f4ea 0,#efe8d8 55%,#e5dac7 100%)}#viewport.dragging{cursor:grabbing}
+#world{position:absolute;left:0;top:0;width:7200px;height:7200px;transform-origin:0 0;will-change:transform;user-select:none;-webkit-user-select:none}
+#atlas{display:block;width:7200px;height:7200px;overflow:visible}.semantic{will-change:opacity}.cart{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.13em;text-transform:uppercase;font-weight:700}.serif{font-family:Georgia,'Times New Roman',serif}.hair{stroke:var(--rule);stroke-width:2;fill:none}.coast{fill:var(--land);stroke:#5e574a;stroke-width:5}.coast2{fill:var(--land2);stroke:#615849;stroke-width:4}.contour{fill:none;stroke:#a69880;stroke-width:3;opacity:.48}.road{fill:none;stroke:#6c6559;stroke-width:8;stroke-linecap:round;stroke-dasharray:12 15;opacity:.7}.river{fill:none;stroke:var(--blue);stroke-width:16;stroke-linecap:round;opacity:.7}.routeGlow{fill:none;stroke:var(--map);stroke-width:13;stroke-linecap:round;opacity:.18}.macroTitle{font:700 82px Georgia,'Times New Roman',serif;letter-spacing:-.04em;fill:var(--ink)}.macroSub{font:700 26px ui-sans-serif,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;fill:var(--muted)}.tiny{font:600 20px ui-sans-serif,system-ui,sans-serif;fill:var(--muted);letter-spacing:.05em}.detailText{font:500 34px Georgia,'Times New Roman',serif;fill:var(--ink)}.formalText{font:650 25px ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--ink)}
+.region-title,.region-hit,.trail-marker{cursor:pointer}.region-hit{fill:transparent}.marker{fill:var(--paper);stroke:var(--ink);stroke-width:4}.markerText{font:800 22px ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;fill:var(--ink)}
+#chrome{position:fixed;inset:0;z-index:30;pointer-events:none;font-family:ui-sans-serif,system-ui,sans-serif}#brand{position:absolute;left:18px;top:16px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}#readout{position:absolute;right:18px;top:14px;text-align:right;font-size:11px;color:var(--muted);line-height:1.45}#readout b{color:var(--ink)}
+#controls{position:absolute;right:16px;bottom:16px;display:flex;gap:7px;pointer-events:auto}#controls button{width:42px;height:42px;border:1px solid var(--ink);background:rgba(239,232,216,.9);color:var(--ink);cursor:pointer;font:700 17px ui-sans-serif,system-ui,sans-serif}#controls button:hover,#controls button:focus{background:var(--ink);color:var(--paper)}
+#depth{position:absolute;left:18px;bottom:18px;width:165px}.depthTrack{height:1px;background:var(--rule);position:relative;margin:7px 0}.depthTrack i{position:absolute;left:0;top:-2px;width:5px;height:5px;border-radius:50%;background:var(--ink)}.depthLabels{display:flex;justify-content:space-between;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+#storyHud{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:min(640px,72vw);pointer-events:none;opacity:0;transition:opacity .2s}#storyHud.show{opacity:1}.storyBox{background:rgba(239,232,216,.94);border:1px solid var(--ink);padding:10px 13px 12px}.storyTop{display:flex;justify-content:space-between;gap:20px;align-items:baseline}.storyName{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.storyStep{font:500 22px Georgia,'Times New Roman',serif}.storyTrack{height:3px;background:#cbbfa9;margin-top:8px;overflow:hidden}.storyTrack i{display:block;width:100%;height:100%;background:var(--map);transform-origin:left;transform:scaleX(0)}
+#exitStory{position:absolute;left:18px;top:46px;pointer-events:auto;opacity:0;transition:opacity .2s;border:1px solid var(--ink);background:rgba(239,232,216,.92);padding:8px 10px;font:750 10px ui-sans-serif,system-ui;text-transform:uppercase;letter-spacing:.1em;cursor:pointer}#exitStory.show{opacity:1}
+#legend{position:absolute;left:18px;top:47px;font-size:10px;line-height:1.55;color:var(--muted);max-width:235px}.legendKey{display:inline-block;width:18px;border-top:2px solid var(--ink);vertical-align:middle;margin-right:6px}.legendKey.green{border-color:var(--map)}.legendKey.red{border-color:var(--mad)}
+#leanPanel{position:absolute;z-index:25;width:360px;background:rgba(239,232,216,.96);border:1px solid var(--ink);padding:14px;font-family:ui-sans-serif,system-ui,sans-serif;pointer-events:auto;display:none}#leanPanel.show{display:block}#leanPanel h3{font:500 24px Georgia,'Times New Roman',serif;margin:0 0 5px}#leanPanel p{font-size:12px;line-height:1.4;color:var(--muted);margin:0 0 10px}#leanPanel label{display:flex;justify-content:space-between;font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:.08em}#leanPanel input{width:100%;accent-color:var(--map)}#leanPanel svg{width:100%;height:130px;display:block;border-bottom:1px solid var(--rule);margin-top:7px}#leanPanel .proof{font-size:10px;color:var(--muted);margin-top:7px}
+@media(max-width:700px){#readout,#legend{display:none}#brand{font-size:9px}.macroTitle{font-size:70px}.macroSub{font-size:22px}#storyHud{width:76vw;bottom:66px}.storyStep{font-size:17px}.storyTop{display:block}#depth{display:none}#leanPanel{width:min(86vw,360px)}}
+@media(prefers-reduced-motion:reduce){#storyHud,#exitStory{transition:none}}
 </style>
 </head>
 <body>
-<div id="viewport" aria-label="Interactive MAP semantic-zoom atlas. Drag to pan, pinch or use the mouse wheel to zoom.">
+<div id="viewport" aria-label="Interactive semantic map of Mutually Assured Progress">
 <div id="world">
-<svg viewBox="0 0 5000 5000" role="img" aria-labelledby="atlasTitle atlasDesc">
-<title id="atlasTitle">Mutually Assured Progress semantic zoom atlas</title>
-<desc id="atlasDesc">A continuous conceptual map with Origin to the west, Theory to the north, Applications to the east, Intuition to the south, and MAP at the center. More detail appears as the user zooms in.</desc>
+<svg id="atlas" viewBox="0 0 7200 7200" role="img" aria-labelledby="atlasTitle atlasDesc">
+<title id="atlasTitle">Mutually Assured Progress living semantic atlas</title><desc id="atlasDesc">A fantasy-map-like conceptual geography with regions for origin, theory, applications, and intuition. Zooming reveals deeper semantics; entering a trail lets scrolling animate the explanation.</desc>
 <defs>
-  <pattern id="paperGrid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" fill="none" stroke="#d8d1c4" stroke-width="1" opacity=".34"/></pattern>
-  <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#24604b"/></marker>
-  <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#97493f"/></marker>
+<pattern id="paperDots" width="38" height="38" patternUnits="userSpaceOnUse"><circle cx="3" cy="4" r="1.4" fill="#8c806b" opacity=".10"/><circle cx="24" cy="20" r="1" fill="#8c806b" opacity=".08"/></pattern>
+<symbol id="tree" viewBox="-18 -28 36 56"><path d="M0-25 L14-4 H6 L17 14 H5 V27 H-5 V14 H-17 L-6-4 H-14Z" fill="#69836b" stroke="#3f5844" stroke-width="2"/></symbol>
+<symbol id="mountain" viewBox="-40 -40 80 80"><path d="M-38 28 L0-34 L38 28 Z" fill="#c5b89f" stroke="#756a59" stroke-width="3"/><path d="M-11-16 L0-34 L13-13 L5-17 L0-8 L-5-18Z" fill="#efe8d8"/></symbol>
+<symbol id="tower" viewBox="-30 -55 60 110"><path d="M-22 48V-28H-14V-46H-4V-28H5V-46H15V-28H22V48Z" fill="#d7c8b0" stroke="#6b5c50" stroke-width="3"/><rect x="-6" y="9" width="12" height="26" fill="#8c6b5f"/></symbol>
+<symbol id="node" viewBox="-18 -18 36 36"><circle r="14" fill="#efe8d8" stroke="#245f49" stroke-width="3"/></symbol>
 </defs>
-<rect width="5000" height="5000" fill="url(#paperGrid)" opacity=".42"/>
+<rect width="7200" height="7200" fill="url(#paperDots)" opacity=".9"/>
 
-<!-- OVERVIEW: the entire idea at a glance -->
-<g id="overview" class="semantic">
-  <path d="M2500 2500 C2020 2230 1540 2210 930 2550" fill="none" stroke="#97493f" stroke-width="18" opacity=".22"/>
-  <path d="M2500 2500 C2920 2280 3450 2200 4140 2480" fill="none" stroke="#527687" stroke-width="18" opacity=".20"/>
-  <path d="M2500 2500 C2460 1970 2460 1470 2500 820" fill="none" stroke="#24604b" stroke-width="18" opacity=".20"/>
-  <path d="M2500 2500 C2480 3020 2460 3510 2520 4180" fill="none" stroke="#b18a34" stroke-width="18" opacity=".22"/>
-
-  <circle cx="2500" cy="2500" r="360" fill="#f3efe4" stroke="#171915" stroke-width="8"/>
-  <circle cx="2500" cy="2500" r="415" fill="none" stroke="#171915" stroke-width="2" opacity=".35"/>
-  <text x="2500" y="2470" text-anchor="middle" class="serif" font-size="420" letter-spacing="-28">MAP</text>
-  <text x="2500" y="2630" text-anchor="middle" class="serif" font-size="95">progress that transfers</text>
-  <text x="2500" y="2740" text-anchor="middle" class="cart-label" font-size="34" fill="#6d6d64">zoom into the relation</text>
-
-  <g class="region-title" data-focus="theory"><circle class="region-hit" cx="2500" cy="820" r="430"/><text x="2500" y="785" text-anchor="middle" class="cart-label" font-size="92" fill="#24604b">THEORY</text><text x="2500" y="895" text-anchor="middle" class="serif" font-size="68">How can progress remain viable?</text></g>
-  <g class="region-title" data-focus="origin"><circle class="region-hit" cx="900" cy="2520" r="430"/><text x="900" y="2475" text-anchor="middle" class="cart-label" font-size="92" fill="#97493f">ORIGIN</text><text x="900" y="2585" text-anchor="middle" class="serif" font-size="68">Why invert MAD?</text></g>
-  <g class="region-title" data-focus="applications"><circle class="region-hit" cx="4110" cy="2490" r="430"/><text x="4110" y="2445" text-anchor="middle" class="cart-label" font-size="92" fill="#527687">APPLICATIONS</text><text x="4110" y="2555" text-anchor="middle" class="serif" font-size="68">Where can progress transfer?</text></g>
-  <g class="region-title" data-focus="intuition"><circle class="region-hit" cx="2510" cy="4180" r="430"/><text x="2510" y="4135" text-anchor="middle" class="cart-label" font-size="92" fill="#b18a34">INTUITION</text><text x="2510" y="4245" text-anchor="middle" class="serif" font-size="68">What is MAP?</text></g>
+<!-- macro geography -->
+<g id="macro" class="semantic">
+<path class="coast" d="M820 2850 C980 2380 1420 2160 1980 2230 C2380 2280 2560 2590 2470 2980 C2390 3350 2110 3640 1820 3870 C1500 4110 990 4000 800 3620 C675 3365 700 3100 820 2850Z"/>
+<path class="coast2" d="M2700 600 C3150 390 3760 430 4190 690 C4500 880 4630 1240 4490 1580 C4330 1970 3930 2140 3540 2100 C3100 2050 2740 1830 2590 1470 C2470 1180 2480 780 2700 600Z"/>
+<path class="coast" d="M4680 2700 C5060 2350 5620 2270 6110 2480 C6430 2620 6620 2940 6540 3300 C6455 3670 6130 3970 5720 4070 C5260 4180 4830 3990 4590 3670 C4370 3370 4410 2940 4680 2700Z"/>
+<path class="coast2" d="M2800 4750 C3190 4490 3750 4470 4180 4680 C4510 4840 4690 5180 4600 5550 C4510 5950 4170 6260 3740 6340 C3280 6420 2840 6240 2610 5900 C2380 5560 2450 4990 2800 4750Z"/>
+<circle cx="3600" cy="3600" r="420" fill="#e6dfcf" stroke="#514c43" stroke-width="6"/>
+<circle cx="3600" cy="3600" r="310" fill="none" stroke="#8a806e" stroke-width="3" stroke-dasharray="8 12"/>
+<path class="road" d="M3290 3500 C2870 3400 2450 3260 2150 3090"/><path class="road" d="M3600 3290 C3600 2850 3580 2440 3570 2040"/><path class="road" d="M3910 3510 C4350 3410 4720 3290 5050 3140"/><path class="road" d="M3600 3910 C3600 4320 3570 4630 3550 4900"/>
+<g transform="translate(3600 3600)"><path d="M0-255 L60-60 L255 0 L60 60 L0 255 L-60 60 L-255 0 L-60-60Z" fill="#245f49" opacity=".14" stroke="#245f49" stroke-width="4"/><circle r="72" fill="#efe8d8" stroke="#171915" stroke-width="5"/><text text-anchor="middle" y="18" class="serif" font-size="54" font-weight="700">MAP</text></g>
+<text x="1340" y="2920" class="macroTitle region-title" data-enter="origin">ORIGIN</text><text x="1340" y="2970" class="macroSub">Why did we need it?</text>
+<text x="3250" y="1100" class="macroTitle region-title" data-enter="theory">THEORY</text><text x="3260" y="1150" class="macroSub">How does it work?</text>
+<text x="5050" y="2940" class="macroTitle region-title" data-enter="applications">APPLICATION</text><text x="5050" y="2990" class="macroSub">Where can it live?</text>
+<text x="3160" y="5480" class="macroTitle region-title" data-enter="intuition">WHAT IS MAP?</text><text x="3260" y="5530" class="macroSub">Progress that transfers</text>
+<text x="3320" y="3490" class="tiny" text-anchor="middle">THREAT → TRANSFER</text><text x="3870" y="3500" class="tiny">VIABILITY → CONVERGENCE</text>
 </g>
 
-<!-- STRUCTURE: relations become visible -->
-<g id="structure" class="semantic">
-  <!-- central invariant -->
-  <circle cx="2500" cy="2500" r="155" fill="#f3efe4" stroke="#171915" stroke-width="4"/>
-  <text x="2500" y="2522" text-anchor="middle" class="serif" font-size="135">MAP</text>
-  <text x="2500" y="2695" text-anchor="middle" class="cart-label" font-size="26" fill="#6d6d64">same object · different resolution</text>
-
-  <!-- theory membranes -->
-  <path d="M2180 820 C2140 680 2200 560 2340 570 C2450 585 2450 710 2415 825 C2385 940 2245 970 2180 820Z" fill="#f3efe4" stroke="#24604b" stroke-width="8"/>
-  <path d="M2595 810 C2570 665 2655 555 2790 585 C2905 610 2920 745 2868 860 C2815 975 2625 958 2595 810Z" fill="#f3efe4" stroke="#24604b" stroke-width="8"/>
-  <text x="2295" y="805" text-anchor="middle" class="cart-label" font-size="54" fill="#24604b">A</text>
-  <text x="2738" y="805" text-anchor="middle" class="cart-label" font-size="54" fill="#24604b">B</text>
-  <path id="theoryTransferPath" d="M2420 760 C2500 690 2580 690 2600 760" fill="none" stroke="#24604b" stroke-width="8" marker-end="url(#arrowGreen)"/>
-  <path d="M2600 845 C2525 915 2445 915 2415 845" fill="none" stroke="#24604b" stroke-width="8" marker-end="url(#arrowGreen)"/>
-  <circle id="theoryParticle" cx="2420" cy="760" r="18" fill="#b18a34"/>
-  <text x="2505" y="1035" text-anchor="middle" class="serif" font-size="50">distinct systems · reciprocal transfer</text>
-
-  <!-- origin deterrence -->
-  <circle cx="700" cy="2520" r="125" fill="#f3efe4" stroke="#97493f" stroke-width="8"/>
-  <circle cx="1110" cy="2520" r="125" fill="#f3efe4" stroke="#97493f" stroke-width="8"/>
-  <text x="700" y="2540" text-anchor="middle" class="cart-label" font-size="42" fill="#97493f">A</text><text x="1110" y="2540" text-anchor="middle" class="cart-label" font-size="42" fill="#97493f">B</text>
-  <line id="madThreatAB" x1="825" y1="2485" x2="980" y2="2485" stroke="#97493f" stroke-width="8" marker-end="url(#arrowRed)"/>
-  <line id="madThreatBA" x1="985" y1="2555" x2="830" y2="2555" stroke="#97493f" stroke-width="8" marker-end="url(#arrowRed)"/>
-  <line id="mapBridgeOrigin" x1="825" y1="2520" x2="985" y2="2520" stroke="#24604b" stroke-width="9" opacity="0"/>
-  <text x="905" y="2750" text-anchor="middle" class="serif" font-size="54">from reciprocal threat → reciprocal capacity</text>
-
-  <!-- applications network -->
-  <circle cx="4100" cy="2480" r="125" fill="#f3efe4" stroke="#527687" stroke-width="8"/>
-  <circle cx="3825" cy="2220" r="95" fill="#f3efe4" stroke="#527687" stroke-width="6"/>
-  <circle cx="4380" cy="2190" r="95" fill="#f3efe4" stroke="#527687" stroke-width="6"/>
-  <circle cx="3820" cy="2780" r="95" fill="#f3efe4" stroke="#527687" stroke-width="6"/>
-  <circle cx="4390" cy="2780" r="95" fill="#f3efe4" stroke="#527687" stroke-width="6"/>
-  <g stroke="#527687" stroke-width="5" opacity=".7"><line x1="4030" y1="2390" x2="3885" y2="2290"/><line x1="4170" y1="2390" x2="4320" y2="2260"/><line x1="4030" y1="2570" x2="3885" y2="2710"/><line x1="4170" y1="2570" x2="4325" y2="2710"/></g>
-  <text x="4100" y="2500" text-anchor="middle" class="cart-label" font-size="36" fill="#527687">MAP?</text>
-  <text x="3825" y="2235" text-anchor="middle" class="cart-label" font-size="24">research</text><text x="4380" y="2205" text-anchor="middle" class="cart-label" font-size="24">agents</text><text x="3820" y="2795" text-anchor="middle" class="cart-label" font-size="24">institutions</text><text x="4390" y="2795" text-anchor="middle" class="cart-label" font-size="24">commons</text>
-
-  <!-- intuition transfer -->
-  <circle cx="2290" cy="4140" r="130" fill="#f3efe4" stroke="#b18a34" stroke-width="8"/><circle cx="2735" cy="4140" r="130" fill="#f3efe4" stroke="#b18a34" stroke-width="8"/>
-  <text x="2290" y="4160" text-anchor="middle" class="cart-label" font-size="42">A +</text><text x="2735" y="4160" text-anchor="middle" class="cart-label" font-size="42">B +</text>
-  <path id="intuitionTransferPath" d="M2420 4105 C2500 4025 2605 4025 2615 4105" fill="none" stroke="#b18a34" stroke-width="8" marker-end="url(#arrowGreen)"/>
-  <circle id="intuitionParticle" cx="2420" cy="4105" r="18" fill="#24604b"/>
-  <text x="2510" y="4390" text-anchor="middle" class="serif" font-size="54">improvement becomes relational when it can cross a boundary</text>
+<!-- cartographic decoration -->
+<g id="terrain" class="semantic">
+<g opacity=".75"><use href="#tower" x="1320" y="3220" width="120" height="220"/><use href="#tower" x="2120" y="3200" width="120" height="220"/><use href="#mountain" x="3070" y="1420" width="180" height="180"/><use href="#mountain" x="3430" y="1280" width="210" height="210"/><use href="#mountain" x="3800" y="1450" width="180" height="180"/>
+<use href="#tree" x="2940" y="5200" width="75" height="120"/><use href="#tree" x="3100" y="5360" width="70" height="115"/><use href="#tree" x="3990" y="5290" width="75" height="120"/><use href="#tree" x="4140" y="5450" width="70" height="115"/></g>
+<path class="river" d="M3340 4880 C3460 5030 3370 5180 3500 5310 C3610 5420 3530 5590 3660 5740 C3780 5880 3710 6030 3810 6170"/>
+<path class="contour" d="M2790 5100 C3040 4820 4050 4800 4380 5160"/><path class="contour" d="M2740 5260 C3050 4940 4090 4930 4440 5310"/><path class="contour" d="M2670 5440 C3030 5080 4140 5070 4500 5490"/>
+<path class="contour" d="M2850 980 C3140 730 4030 710 4310 1040"/><path class="contour" d="M2780 1140 C3140 850 4090 850 4380 1200"/><path class="contour" d="M2750 1310 C3130 1000 4140 1010 4420 1360"/>
+<g opacity=".55"><use href="#tree" x="4990" y="2980" width="70" height="110"/><use href="#tree" x="5210" y="2770" width="60" height="100"/><use href="#tree" x="6050" y="3100" width="65" height="105"/><use href="#tree" x="5900" y="3600" width="70" height="110"/></g>
 </g>
 
-<!-- MECHANISM: the geometry starts naming its machinery -->
-<g id="mechanism" class="semantic">
-  <!-- theory mechanics -->
-  <circle id="viabilityA" cx="2295" cy="795" r="205" fill="none" stroke="#24604b" stroke-width="3" stroke-dasharray="18 15" opacity=".7"/>
-  <circle id="viabilityB" cx="2740" cy="795" r="205" fill="none" stroke="#24604b" stroke-width="3" stroke-dasharray="18 15" opacity=".7"/>
-  <text x="2060" y="570" class="cart-label" font-size="24" fill="#24604b">V_A</text><text x="2910" y="570" class="cart-label" font-size="24" fill="#24604b">V_B</text>
-  <text x="2490" y="675" text-anchor="middle" class="serif" font-size="33">T_AB</text><text x="2490" y="925" text-anchor="middle" class="serif" font-size="33">T_BA</text>
-  <text x="2505" y="1110" text-anchor="middle" class="serif" font-size="38">mutual reflection regulates what transfer does to each participant</text>
-  <text x="2505" y="1170" text-anchor="middle" class="serif" font-size="34" fill="#24604b">V_A(n+1) ≥ V_A(n) · V_B(n+1) ≥ V_B(n)</text>
-
-  <!-- origin mechanism / provenance -->
-  <text x="900" y="2190" text-anchor="middle" class="cart-label" font-size="28" fill="#97493f">DETERRENCE LOGIC</text>
-  <text x="900" y="2860" text-anchor="middle" class="cart-label" font-size="28" fill="#24604b">INVERT THE STABLE RELATION</text>
-  <g id="lineage" transform="translate(380 3040)">
-    <g><rect x="0" y="0" width="250" height="110" fill="#f3efe4" stroke="#171915" stroke-width="3"/><text x="125" y="66" text-anchor="middle" class="cart-label" font-size="24">bounded knowledge</text></g>
-    <line x1="250" y1="55" x2="355" y2="55" stroke="#171915" stroke-width="3"/>
-    <g><rect x="355" y="0" width="210" height="110" fill="#f3efe4" stroke="#171915" stroke-width="3"/><text x="460" y="66" text-anchor="middle" class="cart-label" font-size="24">Giants</text></g>
-    <line x1="565" y1="55" x2="670" y2="55" stroke="#171915" stroke-width="3"/>
-    <g><rect x="670" y="0" width="210" height="110" fill="#f3efe4" stroke="#171915" stroke-width="3"/><text x="775" y="66" text-anchor="middle" class="cart-label" font-size="24">MAP</text></g>
-    <line x1="880" y1="55" x2="985" y2="55" stroke="#171915" stroke-width="3"/>
-    <g><rect x="985" y="0" width="210" height="110" fill="#f3efe4" stroke="#171915" stroke-width="3"/><text x="1090" y="66" text-anchor="middle" class="cart-label" font-size="24">Principia</text></g>
-    <line x1="1195" y1="55" x2="1300" y2="55" stroke="#171915" stroke-width="3"/>
-    <g><rect x="1300" y="0" width="210" height="110" fill="#f3efe4" stroke="#171915" stroke-width="3"/><text x="1405" y="66" text-anchor="middle" class="cart-label" font-size="24">Lean</text></g>
-  </g>
-
-  <!-- application questions -->
-  <g transform="translate(3590 3020)">
-    <text x="520" y="0" text-anchor="middle" class="serif" font-size="48">A MAP application has to answer:</text>
-    <text x="0" y="105" class="cart-label" font-size="30">01 WHO IMPROVES?</text>
-    <text x="0" y="175" class="cart-label" font-size="30">02 WHAT TRANSFERS?</text>
-    <text x="0" y="245" class="cart-label" font-size="30">03 WHO REMAINS VIABLE?</text>
-    <text x="0" y="315" class="cart-label" font-size="30">04 WHAT CAN BREAK?</text>
-  </g>
-
-  <!-- intuition mechanism -->
-  <g transform="translate(1810 4470)">
-    <text x="700" y="0" text-anchor="middle" class="serif" font-size="54">advantage ≠ transfer</text>
-    <text x="700" y="90" text-anchor="middle" class="serif" font-size="45" fill="#24604b">progress = improvement that survives the relation</text>
-    <path d="M130 190 H1270" stroke="#171915" stroke-width="3"/>
-    <text x="130" y="255" class="cart-label" font-size="26">local gain</text><text x="560" y="255" class="cart-label" font-size="26">bridge</text><text x="1000" y="255" class="cart-label" font-size="26">joint viability</text>
-  </g>
+<!-- mid semantic layer -->
+<g id="mid" class="semantic">
+<!-- origin relation -->
+<g id="originScene">
+<circle cx="1500" cy="3370" r="92" fill="#efe8d8" stroke="#934b42" stroke-width="7"/><circle cx="2180" cy="3370" r="92" fill="#efe8d8" stroke="#934b42" stroke-width="7"/><text x="1500" y="3382" text-anchor="middle" class="detailText">A</text><text x="2180" y="3382" text-anchor="middle" class="detailText">B</text>
+<line id="originThreat" x1="1610" y1="3370" x2="2070" y2="3370" stroke="#934b42" stroke-width="12"/><path id="originBridge" d="M1610 3370 C1760 3270 1920 3270 2070 3370" fill="none" stroke="#245f49" stroke-width="13" stroke-linecap="round" opacity="0"/>
+<circle id="originTraveler" cx="1610" cy="3370" r="18" fill="#b18a34" opacity="0"/>
+<text x="1840" y="3190" text-anchor="middle" class="tiny" fill="#934b42">RECIPROCAL THREAT</text>
+</g>
+<!-- theory membranes -->
+<g id="theoryScene"><ellipse id="vA" cx="3300" cy="1580" rx="190" ry="145" fill="none" stroke="#245f49" stroke-width="4" stroke-dasharray="12 12" opacity=".25"/><ellipse id="vB" cx="3900" cy="1580" rx="190" ry="145" fill="none" stroke="#245f49" stroke-width="4" stroke-dasharray="12 12" opacity=".25"/><circle cx="3300" cy="1580" r="96" fill="#efe8d8" stroke="#245f49" stroke-width="7"/><circle cx="3900" cy="1580" r="96" fill="#efe8d8" stroke="#245f49" stroke-width="7"/><text x="3300" y="1592" text-anchor="middle" class="detailText">𝓜A</text><text x="3900" y="1592" text-anchor="middle" class="detailText">𝓜B</text><line id="transferLine" x1="3410" y1="1580" x2="3790" y2="1580" stroke="#245f49" stroke-width="10" stroke-linecap="round"/><circle id="transferDot" cx="3410" cy="1580" r="17" fill="#b18a34"/><text x="3600" y="1450" text-anchor="middle" class="tiny">TRANSFER / REFLECTION</text></g>
+<!-- applications network -->
+<g id="appScene"><path id="appEdge1" d="M5380 3320 L5670 3140" class="hair" stroke="#245f49" stroke-width="8"/><path id="appEdge2" d="M5380 3320 L5830 3440" class="hair" stroke="#245f49" stroke-width="8"/><path id="appEdge3" d="M5380 3320 L5550 3710" class="hair" stroke="#245f49" stroke-width="8"/><path id="appEdge4" d="M5670 3140 L6070 3260" class="hair" stroke="#245f49" stroke-width="8"/><g id="appNodes"><use href="#node" x="5310" y="3250" width="140" height="140"/><use href="#node" x="5600" y="3070" width="140" height="140"/><use href="#node" x="5760" y="3370" width="140" height="140"/><use href="#node" x="5480" y="3640" width="140" height="140"/><use href="#node" x="6000" y="3190" width="140" height="140"/></g><text x="5380" y="3490" class="tiny">RESEARCH</text><text x="5650" y="3030" class="tiny">AGENTS</text><text x="5850" y="3600" class="tiny">INSTITUTIONS</text><text x="5480" y="3870" class="tiny">COMMONS</text></g>
+<!-- intuition -->
+<g id="intuitionScene"><circle cx="3270" cy="5320" r="105" fill="#efe8d8" stroke="#245f49" stroke-width="7"/><circle cx="4030" cy="5660" r="105" fill="#efe8d8" stroke="#69836b" stroke-width="7"/><text x="3270" y="5334" text-anchor="middle" class="detailText">A +</text><text x="4030" y="5674" text-anchor="middle" class="detailText">B</text><path id="intuitionPath" d="M3380 5360 C3530 5370 3580 5530 3720 5535 C3830 5540 3900 5620 3920 5650" fill="none" stroke="#245f49" stroke-width="13" stroke-linecap="round"/><circle id="intuitionDot" r="18" fill="#b18a34" cx="3380" cy="5360"/></g>
 </g>
 
-<!-- FORMAL: source-level material appears only close in -->
+<!-- close semantic layer -->
+<g id="detail" class="semantic">
+<g transform="translate(1160 3660)"><rect width="1380" height="560" rx="36" fill="#efe8d8" stroke="#171915" stroke-width="4"/><text x="55" y="80" class="cart" font-size="24">Origin trail</text><text x="55" y="145" class="detailText">MAD → MAIM → MAP</text><text x="55" y="210" class="tiny">The inversion keeps the relational insight and changes what is mutually preserved.</text><text x="55" y="275" class="tiny">Threat capacity becomes progress capacity; equilibrium becomes a question of transfer and viability.</text><path d="M70 390 H1280" stroke="#b8ad98" stroke-width="3"/><text x="75" y="450" class="tiny">Giants</text><text x="380" y="450" class="tiny">Phase 3 MAP</text><text x="720" y="450" class="tiny">Principia</text><text x="1080" y="450" class="tiny">Lean</text><circle cx="120" cy="500" r="9" fill="#245f49"/><circle cx="485" cy="500" r="9" fill="#245f49"/><circle cx="800" cy="500" r="9" fill="#245f49"/><circle cx="1130" cy="500" r="9" fill="#245f49"/></g>
+<g transform="translate(2780 1830)"><rect width="1640" height="640" rx="36" fill="#efe8d8" stroke="#171915" stroke-width="4"/><text x="55" y="82" class="cart" font-size="24">Theory trail</text><text x="55" y="150" class="detailText">Distinct systems. Bidirectional transfer. Mutual viability.</text><text x="55" y="230" class="formalText">T_AB : 𝓜_A → 𝓜_B</text><text x="55" y="280" class="formalText">T_BA : 𝓜_B → 𝓜_A</text><text x="55" y="360" class="formalText">V_A(n+1) ≥ V_A(n)</text><text x="55" y="410" class="formalText">V_B(n+1) ≥ V_B(n)</text><text x="55" y="500" class="tiny">Scroll deeper to reveal the convergence kernel.</text><circle cx="1460" cy="315" r="105" fill="none" stroke="#245f49" stroke-width="4" stroke-dasharray="12 10"/><circle cx="1460" cy="315" r="62" fill="#efe8d8" stroke="#245f49" stroke-width="5"/><text x="1460" y="325" text-anchor="middle" class="detailText">V</text></g>
+<g transform="translate(4710 3670)"><rect width="1650" height="650" rx="36" fill="#efe8d8" stroke="#171915" stroke-width="4"/><text x="55" y="82" class="cart" font-size="24">Application trail</text><text x="55" y="150" class="detailText">MAP is a test, not a sticker.</text><text x="55" y="230" class="formalText">1. Who improves?</text><text x="55" y="280" class="formalText">2. What transfers?</text><text x="55" y="330" class="formalText">3. Who remains viable?</text><text x="55" y="380" class="formalText">4. What can break?</text><text x="55" y="480" class="tiny">Applications inherit obligations from the relation: expose the bridge, the boundary, and the failure mode.</text></g>
+<g transform="translate(2780 5830)"><rect width="1640" height="500" rx="36" fill="#efe8d8" stroke="#171915" stroke-width="4"/><text x="55" y="82" class="cart" font-size="24">Intuition trail</text><text x="55" y="150" class="detailText">Improvement is local. Progress is relational.</text><text x="55" y="235" class="tiny">A can become better without changing B. MAP begins when useful structure crosses the boundary without erasing either participant.</text><text x="55" y="340" class="formalText">advantage ≠ transfer</text><text x="55" y="405" class="formalText">progress = improvement that transfers</text></g>
+</g>
+
+<!-- formal semantic layer -->
 <g id="formal" class="semantic">
-  <!-- theory formal panel -->
-  <rect x="1960" y="240" width="1100" height="430" fill="#f3efe4" stroke="#171915" stroke-width="2"/>
-  <text x="2020" y="300" class="cart-label" font-size="18" fill="#24604b">PRINCIPIA SYMBOLICA / BOOK V</text>
-  <text x="2020" y="365" class="serif" font-size="34">Mutually Assured Progress</text>
-  <text x="2020" y="420" class="serif" font-size="23">Two symbolic membranes with active metabolisms exchange structured flow</text>
-  <text x="2020" y="458" class="serif" font-size="23">through T_AB and T_BA and mutual reflection while preserving viability.</text>
-  <text x="2020" y="520" class="serif" font-size="25" fill="#24604b">F_symb(M,F) &gt; 0</text>
-  <a href="FORMAL.md"><text x="2020" y="600" class="world-link" font-size="18" fill="#171915">formal notes ↗</text></a>
-  <a href="PROVENANCE.md"><text x="2290" y="600" class="world-link" font-size="18" fill="#171915">provenance ↗</text></a>
-  <a href="map.json"><text x="2580" y="600" class="world-link" font-size="18" fill="#171915">machine-readable ↗</text></a>
+<g transform="translate(3070 2480)"><rect width="1080" height="430" fill="#efe8d8" stroke="#171915" stroke-width="3"/><text x="38" y="62" class="cart" font-size="20">Book V / MAP</text><text x="38" y="122" class="formalText">definition:bk5_mutually_assured_progress</text><text x="38" y="176" class="tiny">Covenant regime: coupled symbolic systems preserve viable continued evolution.</text><text x="38" y="230" class="formalText">axiom:bk5_mutual_metabolit_viability</text><text x="38" y="284" class="tiny">Interaction does not shrink either participant's viability domain.</text><text x="38" y="350" class="tiny">Closest zoom exposes the mechanically checked population kernel.</text></g>
+<g transform="translate(1140 4260)"><rect width="1420" height="430" fill="#efe8d8" stroke="#171915" stroke-width="3"/><text x="38" y="62" class="cart" font-size="20">Provenance discipline</text><text x="38" y="122" class="formalText">ancestral → explicit MAP → formal MAP → Lean kernel</text><text x="38" y="184" class="tiny">Do not retroactively relabel compatible work as derived MAP.</text><text x="38" y="240" class="tiny">The conceptual move came from sublimating MAD/MAIM logic; lexical compression into “MAP” emerged in the human–AI exchange.</text></g>
+<g transform="translate(4710 4350)"><rect width="1650" height="470" fill="#efe8d8" stroke="#171915" stroke-width="3"/><text x="38" y="62" class="cart" font-size="20">Application ledger</text><text x="38" y="122" class="formalText">research : provenance + transferable hypotheses</text><text x="38" y="176" class="formalText">agents : capability without silent authority</text><text x="38" y="230" class="formalText">institutions : coordination without sovereign remainder</text><text x="38" y="284" class="formalText">commons : contribution that compounds</text><text x="38" y="360" class="tiny">These are candidate relational settings, not automatically MAP.</text></g>
+</g>
 
-  <foreignObject x="2020" y="1260" width="980" height="470">
-    <div xmlns="http://www.w3.org/1999/xhtml" class="embedded" data-interactive="true">
-      <h3>Lean convergence kernel</h3>
-      <p>Mechanically checked: <b>mapShare(q,p₀,n) = 1 − qⁿ(1 − p₀)</b> tends to 1 when 0 ≤ q &lt; 1. This is a deliberately narrower claim than the whole MAP theory.</p>
-      <label><span>Residual contraction q</span><output id="qOut">0.70</output></label>
-      <input id="qRange" type="range" min="0" max="99" value="70" aria-label="Residual contraction q"/>
-      <svg viewBox="0 0 720 130" role="img" aria-label="Lean MAP convergence curve"><line x1="10" y1="112" x2="710" y2="112" stroke="#c8c1b2"/><line x1="10" y1="10" x2="10" y2="112" stroke="#c8c1b2"/><path id="leanCurve" pathLength="1" d="" fill="none" stroke="#24604b" stroke-width="4" stroke-dasharray="1" stroke-dashoffset="1"/><circle id="leanDot" cx="10" cy="100" r="6" fill="#b18a34"/></svg>
-      <p><a href="https://github.com/PaulTiffany/sketched/blob/4854e71ae062eb246c9bc7ee5f663c8d34104286/verification/lean/ForcingAnalysis/ForcingAnalysis/Book5ConvergenceMAP.lean">Open pinned Lean source ↗</a></p>
-    </div>
-  </foreignObject>
-
-  <!-- origin formal provenance notes -->
-  <rect x="250" y="3360" width="1420" height="390" fill="#f3efe4" stroke="#171915" stroke-width="2"/>
-  <text x="320" y="3430" class="cart-label" font-size="18" fill="#97493f">PROVENANCE DISCIPLINE</text>
-  <text x="320" y="3505" class="serif" font-size="28">March 2025: the conceptual move was to sublimate MAD/MAIM logic rather than accept</text>
-  <text x="320" y="3550" class="serif" font-size="28">reciprocal destruction as an intelligent equilibrium. The phrase “Mutually Assured Progress”</text>
-  <text x="320" y="3595" class="serif" font-size="28">appears to have crystallized in the human–AI exchange; later work formalized the relation.</text>
-  <text x="320" y="3675" class="cart-label" font-size="18">ANCESTRAL ≠ EXPLICIT MAP ≠ FORMAL MAP ≠ MECHANICALLY CHECKED KERNEL</text>
-
-  <!-- application formal mini-ledger -->
-  <rect x="3470" y="3340" width="1320" height="460" fill="#f3efe4" stroke="#171915" stroke-width="2"/>
-  <text x="3540" y="3410" class="cart-label" font-size="18" fill="#527687">APPLICATION LEDGER</text>
-  <text x="3540" y="3490" class="serif" font-size="29">Research — provenance survives collaboration.</text>
-  <text x="3540" y="3550" class="serif" font-size="29">Agents — capability can transfer without silently transferring authority.</text>
-  <text x="3540" y="3610" class="serif" font-size="29">Institutions — coordination need not manufacture a sovereign remainder.</text>
-  <text x="3540" y="3670" class="serif" font-size="29">Commons — contribution can compound instead of being extracted.</text>
-  <text x="3540" y="3750" class="cart-label" font-size="18">COMPATIBLE IS NOT THE SAME AS DERIVED</text>
-
-  <!-- intuition close-up -->
-  <rect x="1780" y="4630" width="1460" height="260" fill="#f3efe4" stroke="#171915" stroke-width="2"/>
-  <text x="2510" y="4710" text-anchor="middle" class="serif" font-size="34">The shortest MAP test:</text>
-  <text x="2510" y="4785" text-anchor="middle" class="serif" font-size="31">Does my progress preserve or expand your capacity to progress — and vice versa?</text>
-  <text x="2510" y="4850" text-anchor="middle" class="cart-label" font-size="18">NOT HARMONY · NOT FUSION · NOT “COOPERATION WINS”</text>
+<!-- trail entry markers -->
+<g id="markers" class="semantic">
+<g class="trail-marker" data-enter="origin" transform="translate(1770 2820)"><circle r="54" class="marker"/><text text-anchor="middle" y="8" class="markerText">←</text></g>
+<g class="trail-marker" data-enter="theory" transform="translate(3600 1010)"><circle r="54" class="marker"/><text text-anchor="middle" y="8" class="markerText">↑</text></g>
+<g class="trail-marker" data-enter="applications" transform="translate(5480 2870)"><circle r="54" class="marker"/><text text-anchor="middle" y="8" class="markerText">→</text></g>
+<g class="trail-marker" data-enter="intuition" transform="translate(3600 5520)"><circle r="54" class="marker"/><text text-anchor="middle" y="8" class="markerText">↓</text></g>
 </g>
 </svg>
-</div>
+</div></div>
+
+<div id="chrome">
+<div id="brand">MUTUALLY ASSURED PROGRESS / LIVING ATLAS</div>
+<div id="readout"><b id="zoomReadout">1.00×</b><br><span id="modeReadout">free roam</span></div>
+<div id="legend"><span class="legendKey"></span> geography / structure<br><span class="legendKey green"></span> progress / transfer<br><span class="legendKey red"></span> threat / deterrence</div>
+<button id="exitStory">Exit trail</button>
+<div id="depth"><div class="depthLabels"><span>map</span><span>relation</span><span>mechanism</span><span>formal</span></div><div class="depthTrack"><i id="depthDot"></i></div></div>
+<div id="storyHud"><div class="storyBox"><div class="storyTop"><span class="storyName" id="storyName">Theory trail</span><span class="storyStep" id="storyStep">Two systems remain two.</span></div><div class="storyTrack"><i id="storyFill"></i></div></div></div>
+<div id="controls"><button id="homeBtn" title="Home">⌂</button><button id="minusBtn" title="Zoom out">−</button><button id="plusBtn" title="Zoom in">+</button></div>
 </div>
 
-<div id="chrome" aria-hidden="false">
-  <div id="brand">Mutually Assured Progress</div>
-  <div id="crumb">MAP / overview</div>
-  <div id="readout"><b id="depthName">Overview</b><br><span id="scaleReadout">0.20×</span></div>
-  <div id="depth"><div class="track"><i id="depthDot"></i></div><div class="labels"><span>map</span><span>structure</span><span>mechanism</span><span>formal</span></div></div>
-  <div id="hint">drag to pan · wheel / pinch to zoom · double-click to dive</div>
-  <div id="controls"><button id="minus" type="button" aria-label="Zoom out">−</button><button id="reset" type="button" aria-label="Reset view">⌾</button><button id="plus" type="button" aria-label="Zoom in">+</button></div>
+<div id="leanPanel">
+<h3>Lean convergence kernel</h3><p>At the closest theory depth, the illustrative landscape resolves into the mechanically checked scalar orbit.</p><label>Residual contraction q <output id="qOut">0.70</output></label><input id="q" type="range" min="0" max="99" value="70"><svg viewBox="0 0 330 130" role="img" aria-label="MAP share convergence curve"><path id="leanCurve" pathLength="1" fill="none" stroke="#245f49" stroke-width="4" stroke-dasharray="1" stroke-dashoffset="0"/><circle id="leanDot" r="5" fill="#b18a34"/></svg><div class="proof">Mechanically checked: <b>1 − qⁿ(1 − p₀) → 1</b> for 0 ≤ q &lt; 1.</div>
 </div>
 
 <script>
-(() => {
-  const viewport=document.getElementById('viewport');
-  const world=document.getElementById('world');
-  const overview=document.getElementById('overview');
-  const structure=document.getElementById('structure');
-  const mechanism=document.getElementById('mechanism');
-  const formal=document.getElementById('formal');
-  const scaleReadout=document.getElementById('scaleReadout');
-  const depthName=document.getElementById('depthName');
-  const depthDot=document.getElementById('depthDot');
-  const crumb=document.getElementById('crumb');
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const W=5000,H=5000,CX=2500,CY=2500;
-  const targets={map:[CX,CY],origin:[900,2520],theory:[2500,820],applications:[4110,2490],intuition:[2510,4180]};
-  let scale=0.2,tx=0,ty=0,motion=0,drag=null,anim=0;
-  const pointers=new Map();
-  let pinch=null;
-
-  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t)};
-  const minScale=()=>Math.max(.10,Math.min(.28,Math.min(innerWidth/3300,innerHeight/3300)));
-  const maxScale=3.4;
-
-  function centerAt(wx,wy,s=scale){scale=clamp(s,minScale(),maxScale);tx=innerWidth/2-wx*scale;ty=innerHeight/2-wy*scale;bound();render();}
-  function bound(){const pad=120;const sw=W*scale,sh=H*scale;if(sw<=innerWidth){tx=(innerWidth-sw)/2}else{tx=clamp(tx,innerWidth-sw-pad,pad)}if(sh<=innerHeight){ty=(innerHeight-sh)/2}else{ty=clamp(ty,innerHeight-sh-pad,pad)}}
-  function worldAtScreen(x,y){return{x:(x-tx)/scale,y:(y-ty)/scale}}
-  function zoomAt(x,y,factor){const before=worldAtScreen(x,y);const old=scale;scale=clamp(scale*factor,minScale(),maxScale);tx=x-before.x*scale;ty=y-before.y*scale;bound();motion=(motion+Math.abs(Math.log(scale/old))*1.6)%1;render()}
-  function panBy(dx,dy){tx+=dx;ty+=dy;bound();motion=(motion+Math.hypot(dx,dy)*.0015)%1;render()}
-  function fade(group,value){group.style.opacity=value.toFixed(3);group.style.pointerEvents=value>.45?'auto':'none'}
-  function depthState(){if(scale<.58)return['Overview','overview'];if(scale<1.15)return['Structure','structure'];if(scale<1.95)return['Mechanism','mechanism'];return['Formal','formal']}
-  function nearestRegion(){const c=worldAtScreen(innerWidth/2,innerHeight/2);let best=['map',1e9];for(const [name,[x,y]] of Object.entries(targets)){const d=Math.hypot(c.x-x,c.y-y);if(d<best[1])best=[name,d]}return best[0]}
-  function setParticle(pathId,circleId,phase){const path=document.getElementById(pathId),dot=document.getElementById(circleId);if(!path||!dot)return;try{const len=path.getTotalLength(),p=path.getPointAtLength(len*phase);dot.setAttribute('cx',p.x);dot.setAttribute('cy',p.y)}catch(_){}}
-
-  function render(){world.style.transform=`translate3d(${tx}px,${ty}px,0) scale(${scale})`;
-    const o0=1-smooth(.42,.76,scale);
-    const o1=smooth(.35,.72,scale)*(1-.25*smooth(2.1,3.2,scale));
-    const o2=smooth(.82,1.55,scale);
-    const o3=smooth(1.65,2.45,scale);
-    fade(overview,o0);fade(structure,o1);fade(mechanism,o2);fade(formal,o3);
-    const [name]=depthState();depthName.textContent=name;scaleReadout.textContent=scale.toFixed(2)+'×';
-    const dp=clamp((Math.log(scale)-Math.log(minScale()))/(Math.log(maxScale)-Math.log(minScale())),0,1);depthDot.style.transform=`translateX(${dp*145}px)`;
-    const region=nearestRegion();crumb.textContent=`MAP / ${region} / ${name.toLowerCase()}`;
-
-    const mech=smooth(.75,1.55,scale);
-    document.getElementById('madThreatAB').style.opacity=(1-mech).toFixed(3);
-    document.getElementById('madThreatBA').style.opacity=(1-mech).toFixed(3);
-    document.getElementById('mapBridgeOrigin').style.opacity=mech.toFixed(3);
-    document.getElementById('viabilityA').setAttribute('r',205+mech*58);
-    document.getElementById('viabilityB').setAttribute('r',205+mech*58);
-    setParticle('theoryTransferPath','theoryParticle',motion);
-    setParticle('intuitionTransferPath','intuitionParticle',(motion+.5)%1);
-
-    const formalP=smooth(1.7,2.8,scale);const lean=document.getElementById('leanCurve');lean.style.strokeDashoffset=String(1-formalP);updateLeanDot(formalP);
-  }
-
-  function animateTo(wx,wy,s){cancelAnimationFrame(anim);if(reduce){centerAt(wx,wy,s);return}const s0=scale,x0=tx,y0=ty;const targetS=clamp(s,minScale(),maxScale);const targetX=innerWidth/2-wx*targetS,targetY=innerHeight/2-wy*targetS;const start=performance.now();const dur=650;function frame(now){const t=clamp((now-start)/dur,0,1),e=1-Math.pow(1-t,4);scale=s0+(targetS-s0)*e;tx=x0+(targetX-x0)*e;ty=y0+(targetY-y0)*e;bound();motion=(motion+.007)%1;render();if(t<1)anim=requestAnimationFrame(frame)}anim=requestAnimationFrame(frame)}
-
-  viewport.addEventListener('wheel',e=>{e.preventDefault();const mouseLike=e.deltaMode===1||(Math.abs(e.deltaY)>48&&Math.abs(e.deltaX)<4);if(e.ctrlKey||e.metaKey||mouseLike){zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.0015))}else{panBy(-e.deltaX,-e.deltaY)}},{passive:false});
-
-  viewport.addEventListener('dblclick',e=>{if(e.target.closest('a,input,button,.embedded'))return;zoomAt(e.clientX,e.clientY,1.65)});
-
-  viewport.addEventListener('pointerdown',e=>{if(e.target.closest('a,input,button,.embedded'))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});viewport.setPointerCapture(e.pointerId);if(pointers.size===1){drag={id:e.pointerId,x:e.clientX,y:e.clientY};viewport.classList.add('dragging')}else if(pointers.size===2){const pts=[...pointers.values()];pinch={d:Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y),mx:(pts[0].x+pts[1].x)/2,my:(pts[0].y+pts[1].y)/2};drag=null}});
-  viewport.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;const prev=pointers.get(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1&&drag&&drag.id===e.pointerId){panBy(e.clientX-prev.x,e.clientY-prev.y);drag.x=e.clientX;drag.y=e.clientY}else if(pointers.size===2){const pts=[...pointers.values()],d=Math.max(1,Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y)),mx=(pts[0].x+pts[1].x)/2,my=(pts[0].y+pts[1].y)/2;if(pinch){panBy(mx-pinch.mx,my-pinch.my);zoomAt(mx,my,d/pinch.d)}pinch={d,mx,my}}});
-  function endPointer(e){pointers.delete(e.pointerId);if(pointers.size<2)pinch=null;if(pointers.size===0){drag=null;viewport.classList.remove('dragging')}else if(pointers.size===1){const [id,p]=[...pointers.entries()][0];drag={id,x:p.x,y:p.y}}}
-  viewport.addEventListener('pointerup',endPointer);viewport.addEventListener('pointercancel',endPointer);
-
-  document.querySelectorAll('[data-focus]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();const n=el.dataset.focus,[x,y]=targets[n];animateTo(x,y,Math.max(.78,scale*1.35))}));
-  document.getElementById('plus').addEventListener('click',()=>zoomAt(innerWidth/2,innerHeight/2,1.35));
-  document.getElementById('minus').addEventListener('click',()=>zoomAt(innerWidth/2,innerHeight/2,1/1.35));
-  document.getElementById('reset').addEventListener('click',()=>animateTo(CX,CY,minScale()));
-  addEventListener('keydown',e=>{if(e.target.matches('input'))return;if(e.key==='+'||e.key==='=')zoomAt(innerWidth/2,innerHeight/2,1.25);if(e.key==='-')zoomAt(innerWidth/2,innerHeight/2,.8);if(e.key==='0'||e.key==='Escape')animateTo(CX,CY,minScale());if(e.key==='ArrowLeft')panBy(90,0);if(e.key==='ArrowRight')panBy(-90,0);if(e.key==='ArrowUp')panBy(0,90);if(e.key==='ArrowDown')panBy(0,-90)});
-
-  const qRange=document.getElementById('qRange'),qOut=document.getElementById('qOut'),leanCurve=document.getElementById('leanCurve'),leanDot=document.getElementById('leanDot');
-  function plotLean(){const q=+qRange.value/100,p0=.18; qOut.textContent=q.toFixed(2);let d='';for(let n=0;n<=35;n++){const v=1-Math.pow(q,n)*(1-p0),x=10+n*(700/35),y=112-v*98;d+=(n?'L':'M')+x+' '+y+' '}leanCurve.setAttribute('d',d);render()}
-  function updateLeanDot(p){try{const len=leanCurve.getTotalLength(),pt=leanCurve.getPointAtLength(len*p);leanDot.setAttribute('cx',pt.x);leanDot.setAttribute('cy',pt.y);leanDot.style.opacity=p>.02?'1':'0'}catch(_){}}
-  qRange.addEventListener('input',plotLean);
-
-  addEventListener('resize',()=>{const c=worldAtScreen(innerWidth/2,innerHeight/2);tx=innerWidth/2-c.x*scale;ty=innerHeight/2-c.y*scale;bound();render()});
-  scale=minScale();centerAt(CX,CY,scale);plotLean();
+(()=>{
+const $=s=>document.querySelector(s),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,smooth=t=>t*t*(3-2*t);
+const viewport=$('#viewport'),world=$('#world'),macro=$('#macro'),terrain=$('#terrain'),mid=$('#mid'),detail=$('#detail'),formal=$('#formal'),markers=$('#markers'),zoomReadout=$('#zoomReadout'),modeReadout=$('#modeReadout'),depthDot=$('#depthDot'),storyHud=$('#storyHud'),storyName=$('#storyName'),storyStep=$('#storyStep'),storyFill=$('#storyFill'),exitStory=$('#exitStory'),leanPanel=$('#leanPanel');
+const WORLD=7200;let cam={x:3600,y:3600,s:.115},target={...cam},raf=0,drag=null,pinch=null,story=null,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const semantic={macro:[.08,.42],terrain:[.12,.75],mid:[.22,1.35],detail:[.48,2.4],formal:[.9,4.4]};
+const stories={
+ origin:{name:'Origin trail',steps:['MAD stabilizes through threat.','Keep the relation; change what it preserves.','Threat becomes transferable capacity.','Trace the research lineage.'],path:[[1840,3370,.55],[1840,3370,.82],[1840,3650,1.05],[1840,3970,1.34]]},
+ theory:{name:'Theory trail',steps:['Two systems remain two.','Transfer crosses the boundary.','Viability constrains the coupling.','Resolve into the formal kernel.'],path:[[3600,1580,.58],[3600,1580,.88],[3600,2080,1.18],[3600,2700,1.62]]},
+ applications:{name:'Application trail',steps:['Change the skin; keep the relation.','Watch the network propagate.','Interrogate the bridge.','Open the application ledger.'],path:[[5580,3370,.56],[5660,3370,.83],[5580,3920,1.12],[5520,4540,1.46]]},
+ intuition:{name:'Intuition trail',steps:['Improvement can stay local.','Useful structure crosses the boundary.','The receiver changes without disappearing.','Name the distinction.'],path:[[3600,5480,.56],[3650,5500,.84],[3760,5580,1.08],[3600,6070,1.38]]}
+};
+function fit(){if(story)return;target.s=Math.min(innerWidth,innerHeight)/(WORLD*.69);target.x=3600;target.y=3600;start()}
+function screen(){const tx=innerWidth/2-cam.x*cam.s,ty=innerHeight/2-cam.y*cam.s;world.style.transform=`translate3d(${tx}px,${ty}px,0) scale(${cam.s})`}
+function start(){if(!raf)raf=requestAnimationFrame(tick)}
+function tick(){const e=reduced?1:.18;cam.x+= (target.x-cam.x)*e;cam.y+=(target.y-cam.y)*e;cam.s+=(target.s-cam.s)*e;screen();renderSemantic();if(Math.abs(target.x-cam.x)>.05||Math.abs(target.y-cam.y)>.05||Math.abs(target.s-cam.s)>.0002)raf=requestAnimationFrame(tick);else raf=0}
+function fade(scale,a,b){return clamp((scale-a)/(b-a),0,1)}
+function renderSemantic(){const s=cam.s;macro.style.opacity=String(1-clamp((s-.52)/.6,0,.78));terrain.style.opacity=String(.35+.65*fade(s,.1,.5));mid.style.opacity=String(fade(s,.18,.52));detail.style.opacity=String(fade(s,.42,.95));formal.style.opacity=String(fade(s,.82,1.55));markers.style.opacity=String(clamp(1-(s-.8),.18,1));zoomReadout.textContent=s.toFixed(2)+'×';const d=clamp((Math.log(s/.1)/Math.log(18)),0,1);depthDot.style.transform=`translateX(${d*160}px)`;if(!story)modeReadout.textContent=s<.25?'geography':s<.55?'relations':s<1?'mechanisms':'formal detail';positionLean();}
+function zoomAt(clientX,clientY,factor){const old=target.s,newS=clamp(old*factor,.07,2.7),wx=(clientX-innerWidth/2)/old+target.x,wy=(clientY-innerHeight/2)/old+target.y;target.x=wx-(clientX-innerWidth/2)/newS;target.y=wy-(clientY-innerHeight/2)/newS;target.s=newS;bound();start()}
+function bound(){const margin=450/target.s;target.x=clamp(target.x,-margin,WORLD+margin);target.y=clamp(target.y,-margin,WORLD+margin)}
+function pan(dx,dy){target.x-=dx/target.s;target.y-=dy/target.s;bound();start()}
+function catmull(points,t){if(points.length<2)return points[0];const n=points.length-1,u=clamp(t,0,.999999)*n,i=Math.floor(u),f=u-i,p0=points[Math.max(0,i-1)],p1=points[i],p2=points[Math.min(n,i+1)],p3=points[Math.min(n,i+2)];const c=(a,b,c,d)=>.5*((2*b)+(-a+c)*f+(2*a-5*b+4*c-d)*f*f+(-a+3*b-3*c+d)*f*f*f);return[c(p0[0],p1[0],p2[0],p3[0]),c(p0[1],p1[1],p2[1],p3[1]),c(p0[2],p1[2],p2[2],p3[2])]}
+function enterStory(id){const def=stories[id];story={id,p:0,def};storyHud.classList.add('show');exitStory.classList.add('show');storyName.textContent=def.name;modeReadout.textContent='guided trail';applyStory()}
+function leaveStory(){story=null;storyHud.classList.remove('show');exitStory.classList.remove('show');modeReadout.textContent='free roam';leanPanel.classList.remove('show')}
+function applyStory(){if(!story)return;const p=clamp(story.p,0,1),v=catmull(story.def.path,p);target.x=v[0];target.y=v[1];target.s=v[2];storyFill.style.transform=`scaleX(${p})`;const idx=Math.min(story.def.steps.length-1,Math.floor(p*story.def.steps.length));storyStep.textContent=story.def.steps[idx];animateStory(story.id,p);start()}
+function setDash(el,p){if(!el)return;el.style.strokeDasharray='1';el.style.strokeDashoffset=String(1-p)}
+function animateStory(id,p){const q=smooth(p);if(id==='origin'){const threat=$('#originThreat'),bridge=$('#originBridge'),trav=$('#originTraveler');threat.style.opacity=String(1-clamp(q*1.7,0,1));bridge.style.opacity=String(clamp((q-.18)*1.8,0,1));setDash(bridge,clamp((q-.14)*1.5,0,1));const pathLen=bridge.getTotalLength(),pt=bridge.getPointAtLength(pathLen*clamp((q-.28)*1.55,0,1));trav.setAttribute('cx',pt.x);trav.setAttribute('cy',pt.y);trav.style.opacity=String(clamp((q-.24)*2,0,1));}
+if(id==='theory'){const va=$('#vA'),vb=$('#vB'),dot=$('#transferDot'),line=$('#transferLine');const grow=.72+q*.5;va.setAttribute('rx',190*grow);va.setAttribute('ry',145*grow);vb.setAttribute('rx',190*grow);vb.setAttribute('ry',145*grow);va.style.opacity=vb.style.opacity=String(.18+.72*q);const x=3410+(3790-3410)*((Math.sin(q*Math.PI*5)+1)/2);dot.setAttribute('cx',x);line.style.opacity=String(.35+.65*q);if(p>.76){leanPanel.classList.add('show');drawLean(clamp((p-.76)/.24,0,1))}else leanPanel.classList.remove('show');}
+if(id==='applications'){['#appEdge1','#appEdge2','#appEdge3','#appEdge4'].forEach((s,i)=>setDash($(s),clamp(q*1.35-i*.13,0,1)));[...document.querySelectorAll('#appNodes use')].forEach((n,i)=>{const z=clamp((q-i*.1)*1.7,0,1);n.style.opacity=String(z);n.style.transform=`scale(${.55+.45*z})`;n.style.transformBox='fill-box';n.style.transformOrigin='center'});}
+if(id==='intuition'){const path=$('#intuitionPath'),dot=$('#intuitionDot');setDash(path,clamp(q*1.2,0,1));const len=path.getTotalLength(),pt=path.getPointAtLength(len*q);dot.setAttribute('cx',pt.x);dot.setAttribute('cy',pt.y);}
+}
+function positionLean(){if(!story||story.id!=='theory'||story.p<=.76)return;const sx=(3600-cam.x)*cam.s+innerWidth/2,sy=(2750-cam.y)*cam.s+innerHeight/2;leanPanel.style.left=clamp(sx-180,12,innerWidth-372)+'px';leanPanel.style.top=clamp(sy-90,80,innerHeight-260)+'px'}
+const q=$('#q'),qOut=$('#qOut'),leanCurve=$('#leanCurve'),leanDot=$('#leanDot');function drawLean(reveal=1){const Q=+q.value/100,p0=.18;qOut.textContent=Q.toFixed(2);let d='';for(let n=0;n<=30;n++){const v=1-Math.pow(Q,n)*(1-p0),x=8+n*10.4,y=120-v*108;d+=(n?'L':'M')+x+' '+y+' '}leanCurve.setAttribute('d',d);leanCurve.style.strokeDasharray='1';leanCurve.style.strokeDashoffset=String(1-reveal);requestAnimationFrame(()=>{try{const len=leanCurve.getTotalLength(),pt=leanCurve.getPointAtLength(len*reveal);leanDot.setAttribute('cx',pt.x);leanDot.setAttribute('cy',pt.y)}catch(_){}})}q.addEventListener('input',()=>drawLean(story&&story.id==='theory'?clamp((story.p-.76)/.24,0,1):1));drawLean(1);
+viewport.addEventListener('wheel',e=>{e.preventDefault();if(story&&!e.ctrlKey&&!e.metaKey&&!e.altKey){story.p=clamp(story.p+e.deltaY*.00085,0,1);applyStory();return}if(e.ctrlKey||e.metaKey||Math.abs(e.deltaY)>Math.abs(e.deltaX)*1.3){zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.0012))}else pan(-e.deltaX,-e.deltaY)},{passive:false});
+viewport.addEventListener('pointerdown',e=>{if(e.target.closest('#leanPanel')||e.target.closest('#controls'))return;viewport.setPointerCapture(e.pointerId);drag={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,startP:story?story.p:null};viewport.classList.add('dragging')});viewport.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.lastX,dy=e.clientY-drag.lastY;drag.lastX=e.clientX;drag.lastY=e.clientY;if(story){story.p=clamp(story.p-dy*.0016,0,1);applyStory()}else pan(dx,dy)});function end(e){if(!drag||e.pointerId!==drag.id)return;drag=null;viewport.classList.remove('dragging')}viewport.addEventListener('pointerup',end);viewport.addEventListener('pointercancel',end);
+let touches=new Map();viewport.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')touches.set(e.pointerId,{x:e.clientX,y:e.clientY})});viewport.addEventListener('pointermove',e=>{if(e.pointerType!=='touch'||!touches.has(e.pointerId))return;touches.set(e.pointerId,{x:e.clientX,y:e.clientY});if(touches.size===2&&!story){const a=[...touches.values()],dx=a[0].x-a[1].x,dy=a[0].y-a[1].y,dist=Math.hypot(dx,dy),cx=(a[0].x+a[1].x)/2,cy=(a[0].y+a[1].y)/2;if(pinch){zoomAt(cx,cy,dist/pinch.dist)}pinch={dist}}});viewport.addEventListener('pointerup',e=>{touches.delete(e.pointerId);if(touches.size<2)pinch=null});viewport.addEventListener('pointercancel',e=>{touches.delete(e.pointerId);if(touches.size<2)pinch=null});
+document.querySelectorAll('[data-enter]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();enterStory(el.dataset.enter)}));viewport.addEventListener('dblclick',e=>{if(!story)zoomAt(e.clientX,e.clientY,1.55)});$('#plusBtn').onclick=()=>zoomAt(innerWidth/2,innerHeight/2,1.35);$('#minusBtn').onclick=()=>zoomAt(innerWidth/2,innerHeight/2,1/1.35);$('#homeBtn').onclick=()=>{leaveStory();fit()};exitStory.onclick=()=>leaveStory();addEventListener('keydown',e=>{if(e.key==='Escape'){if(story)leaveStory();else fit()}if(story){if(e.key==='ArrowDown'||e.key==='ArrowRight'){story.p=clamp(story.p+.08,0,1);applyStory()}if(e.key==='ArrowUp'||e.key==='ArrowLeft'){story.p=clamp(story.p-.08,0,1);applyStory()}}});addEventListener('resize',()=>{if(!story)fit();else applyStory()});
+fit();renderSemantic();
 })();
 </script>
-</body>
-</html>
+</body></html>
