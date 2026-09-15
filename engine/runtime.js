@@ -30,11 +30,15 @@ export class SemanticMotionRuntime {
     });
     if (world.width && world.height) this.camera.setBounds({ x: 0, y: 0, width: world.width, height: world.height });
 
+    this.guide = { x: this.camera.x, y: this.camera.y, scale: this.camera.scale };
+    this.userView = { dx: 0, dy: 0, zoom: 1 };
+
     this.signals = new SignalStore({
       'timeline.primary': 0,
       'camera.x': this.camera.x,
       'camera.y': this.camera.y,
       'camera.scale': this.camera.scale,
+      'camera.userZoom': 1,
       'input.scrollVelocity': 0,
       'input.scrollDirection': 0,
       'input.activity': 0
@@ -51,6 +55,14 @@ export class SemanticMotionRuntime {
 
   setMode(mode) {
     if (mode !== 'free' && mode !== 'timeline') throw new Error(`Unknown mode: ${mode}`);
+    if (mode === this.mode) return;
+    if (mode === 'timeline') {
+      this.guide = this.camera.snapshot();
+      this.userView = { dx: 0, dy: 0, zoom: 1 };
+    } else {
+      this.guide = this.camera.snapshot();
+      this.userView = { dx: 0, dy: 0, zoom: 1 };
+    }
     this.mode = mode;
     this.scheduler.invalidate();
   }
@@ -73,11 +85,18 @@ export class SemanticMotionRuntime {
 
   handleIntent = intent => {
     if (intent.type === 'zoom') {
-      this.camera.zoomAt(intent.x, intent.y, intent.factor);
+      if (this.mode === 'timeline') this.zoomGuidedAt(intent.x, intent.y, intent.factor);
+      else this.camera.zoomAt(intent.x, intent.y, intent.factor);
       this.markActivity(intent.rawDelta || Math.log(intent.factor) * -500);
     } else if (intent.type === 'pinch') {
-      this.camera.panScreen(intent.dx, intent.dy);
-      this.camera.zoomAt(intent.x, intent.y, intent.factor);
+      if (this.mode === 'timeline') {
+        this.userView.dx -= intent.dx / this.camera.scale;
+        this.userView.dy -= intent.dy / this.camera.scale;
+        this.zoomGuidedAt(intent.x, intent.y, intent.factor);
+      } else {
+        this.camera.panScreen(intent.dx, intent.dy);
+        this.camera.zoomAt(intent.x, intent.y, intent.factor);
+      }
       this.markActivity(Math.log(intent.factor) * -500);
     } else if (intent.type === 'scroll') {
       if (this.mode === 'timeline') {
@@ -96,6 +115,16 @@ export class SemanticMotionRuntime {
     }
     this.scheduler.invalidate();
   };
+
+  zoomGuidedAt(screenX, screenY, factor) {
+    const before = this.camera.screenToWorld(screenX, screenY);
+    const desiredScale = clamp(this.guide.scale * this.userView.zoom * factor, this.camera.minScale, this.camera.maxScale);
+    this.userView.zoom = desiredScale / Math.max(1e-9, this.guide.scale);
+    const nextX = before.x - (screenX - this.camera.viewport.width / 2) / desiredScale;
+    const nextY = before.y - (screenY - this.camera.viewport.height / 2) / desiredScale;
+    this.userView.dx = nextX - this.guide.x;
+    this.userView.dy = nextY - this.guide.y;
+  }
 
   markActivity(delta) {
     const previous = this.signals.get('input.scrollVelocity');
@@ -116,17 +145,21 @@ export class SemanticMotionRuntime {
       'input.activity': Math.min(1, Math.abs(velocity) / 120)
     });
 
-    const commands = this.timeline.sample(this.signals);
-    for (const command of commands) {
-      if (command.target === '@camera') this.applyCameraCommand(command);
-      else this.renderer.queue(command);
+    if (this.mode === 'timeline') {
+      const cameraCommands = this.timeline.sample(this.signals, track => track.target === '@camera');
+      for (const command of cameraCommands) this.applyGuideCommand(command);
+      this.composeGuidedCamera();
     }
 
     this.signals.patch({
       'camera.x': this.camera.x,
       'camera.y': this.camera.y,
-      'camera.scale': this.camera.scale
+      'camera.scale': this.camera.scale,
+      'camera.userZoom': this.userView.zoom
     });
+
+    const visualCommands = this.timeline.sample(this.signals, track => track.target !== '@camera');
+    for (const command of visualCommands) this.renderer.queue(command);
     this.renderer.queueLOD(this.camera.scale);
     this.renderer.flush();
 
@@ -140,12 +173,18 @@ export class SemanticMotionRuntime {
     return velocity !== 0;
   };
 
-  applyCameraCommand(command) {
-    if (this.mode !== 'timeline') return;
-    if (command.channel === 'x') this.camera.x = command.value;
-    if (command.channel === 'y') this.camera.y = command.value;
-    if (command.channel === 'scale') this.camera.scale = clamp(command.value, this.camera.minScale, this.camera.maxScale);
-    this.camera.constrain();
+  applyGuideCommand(command) {
+    if (command.channel === 'x') this.guide.x = command.value;
+    if (command.channel === 'y') this.guide.y = command.value;
+    if (command.channel === 'scale') this.guide.scale = clamp(command.value, this.camera.minScale, this.camera.maxScale);
+  }
+
+  composeGuidedCamera() {
+    this.camera.set({
+      x: this.guide.x + this.userView.dx,
+      y: this.guide.y + this.userView.dy,
+      scale: this.guide.scale * this.userView.zoom
+    });
   }
 
   destroy() {
