@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "world": { "width": 7200, "height": 7200, "center": [3600, 3600] },
+  "semantic_layers": [
+    { "id": "geography", "scale": [0.07, 0.65] },
+    { "id": "relations", "scale": [0.18, 1.35] },
+    { "id": "mechanisms", "scale": [0.42, 2.4] },
+    { "id": "formal", "scale": [0.82, 4.4] }
+  ],
+  "regions": {
+    "origin": { "center": [1840, 3370], "entry_scale": 0.55, "label": "Origin", "question": "Why did we need it?" },
+    "theory": { "center": [3600, 1580], "entry_scale": 0.58, "label": "Theory", "question": "How does it work?" },
+    "applications": { "center": [5580, 3370], "entry_scale": 0.56, "label": "Application", "question": "Where can it live?" },
+    "intuition": { "center": [3600, 5480], "entry_scale": 0.56, "label": "What is MAP?", "question": "What does progress that transfers mean?" }
+  },
+  "objects": {
+    "origin.actor_a": { "selector": "#originScene circle:nth-of-type(1)", "layer": "relations", "status": "interpretation" },
+    "origin.actor_b": { "selector": "#originScene circle:nth-of-type(2)", "layer": "relations", "status": "interpretation" },
+    "origin.threat_edge": { "selector": "#originThreat", "layer": "relations", "status": "interpretation" },
+    "origin.map_bridge": { "selector": "#originBridge", "layer": "relations", "status": "interpretation" },
+    "origin.transfer_particle": { "selector": "#originTraveler", "layer": "relations", "status": "interpretation" },
+    "theory.membrane_a": { "selector": "#theoryScene circle:nth-of-type(1)", "layer": "relations", "status": "formally_defined" },
+    "theory.membrane_b": { "selector": "#theoryScene circle:nth-of-type(2)", "layer": "relations", "status": "formally_defined" },
+    "theory.viability_a": { "selector": "#vA", "layer": "mechanisms", "status": "formally_defined" },
+    "theory.viability_b": { "selector": "#vB", "layer": "mechanisms", "status": "formally_defined" },
+    "theory.transfer_edge": { "selector": "#transferLine", "layer": "mechanisms", "status": "formally_defined" },
+    "theory.transfer_particle": { "selector": "#transferDot", "layer": "mechanisms", "status": "interpretation" },
+    "applications.edge_research_agent": { "selector": "#appEdge1", "layer": "relations", "status": "compatible_application" },
+    "applications.edge_research_institution": { "selector": "#appEdge2", "layer": "relations", "status": "compatible_application" },
+    "applications.edge_research_commons": { "selector": "#appEdge3", "layer": "relations", "status": "compatible_application" },
+    "intuition.transfer_path": { "selector": "#intuitionPath", "layer": "relations", "status": "interpretation" },
+    "intuition.transfer_particle": { "selector": "#intuitionDot", "layer": "relations", "status": "interpretation" },
+    "formal.lean_curve": { "selector": "#leanCurve", "layer": "formal", "status": "mechanically_checked" }
+  }
+}
