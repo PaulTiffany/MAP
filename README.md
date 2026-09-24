@@ -17,6 +17,8 @@ It does **not** assume cooperation automatically wins. The formal work studies w
 
 ### See it
 
+**[The listening forest](https://paultiffany.github.io/MAP/demos/dzanga-cinema/)** — a cinematic Congo Basin forest study: an original generated scene with slow water, mist, canopy movement, three atmospheres, and optional synthesized sound. [Scene notes](demos/dzanga-cinema/README.md).
+
 **[Interactive MAP](https://paultiffany.github.io/MAP/)** · **[Formal core](FORMAL.md)** · **[Provenance](PROVENANCE.md)** · **[Machine-readable MAP](map.json)**
 
 > **Advantage is not enough. Progress has to transfer through the dynamics.**
