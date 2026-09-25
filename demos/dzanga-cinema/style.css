@@ -9,7 +9,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #efefbc; outline-offs
 button:disabled { cursor: default; opacity: .45; }
 a { color: inherit; text-decoration: none; }
 a:hover { color: #fff; }
-#forest, #plate, #scene, .edge-shade { position: fixed; inset: 0; width: 100%; height: 100%; }
+#forest, #plate, #scene, #fauna, .edge-shade { position: fixed; inset: 0; width: 100%; height: 100%; }
+#fauna { pointer-events: none; }
 #plate { display: block; object-fit: cover; object-position: 50% 50%; }
 #scene { opacity: 0; transition: opacity 1.4s ease; }
 #scene.ready { opacity: 1; }
@@ -39,6 +40,24 @@ h1 em, h2 em { font-weight: 400; color: #e0e6c9; }
 .mood-dot { display: block; width: 5px; height: 5px; border-radius: 50%; background: #d8dfa9; opacity: .45; }
 [data-mood="rain"] .mood-dot { background: #a9c6c0; }
 [data-mood="dusk"] .mood-dot { background: #a3b6d9; }
+[data-hour="dusk"] .mood-dot { background: #a3b6d9; }
+[data-hour="noon"] .mood-dot { background: #e2dcaf; }
+.forest-clock { position: absolute; right: 6.2%; bottom: 159px; width: 248px; padding: 15px 18px 11px; background: #0a1b1266; backdrop-filter: blur(9px); border: 1px solid #e4e8d124; border-radius: 4px; }
+.clock-heading { display: flex; justify-content: space-between; align-items: baseline; }
+.clock-heading label { font-size: 8px; letter-spacing: .20em; color: #ccd6c2; }
+.clock-heading output { font: 400 24px Georgia,serif; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.forest-clock input { display: block; width: 100%; height: 24px; margin: 10px 0 4px; accent-color: #d8dfb9; cursor: pointer; }
+.clock-options { display: flex; justify-content: space-between; gap: 10px; }
+.clock-options button { min-height: 35px; border: 0; padding: 0; background: none; color: #d0d9c6; font-size: 10px; }
+.clock-options button[aria-pressed="true"] { color: #f6f8df; }
+#cycle-button span { margin-left: 7px; font-size: 16px; }
+.rain-indicator { display: inline-block; width: 5px; height: 5px; margin-left: 7px; border: 1px solid #c7d5c1; border-radius: 50%; }
+[aria-pressed="true"] .rain-indicator { background: #dfe9d2; }
+.methodology-link { color: #e2ebbb; font-weight: 600; }
+.volume-control { display: flex; align-items: center; gap: 12px; font-size: 11px; color: #c1ceb7; }
+.volume-control input { min-width: 60px; flex: 1; accent-color: #d8dfb9; }.volume-control output { min-width: 30px; }
+.performance-notes { margin-top: 24px; border-top: 1px solid var(--line); padding-top: 17px; font-size: 10px; color: #b4c4ab; }
+.performance-notes summary { cursor: pointer; }.performance-notes p { font-size: 10px !important; }
 .selected .mood-dot { opacity: 1; }
 .control { border: 0; background: none; height: 40px; padding: 0 13px; display: flex; align-items: center; justify-content: center; gap: 10px; color: #dce2d1; font-size: 11px; white-space: nowrap; }
 .control:hover { color: white; background: #dce5c90c; border-radius: 25px; }
@@ -76,6 +95,9 @@ dialog .keyboard-note { font-size: 10px !important; color: #a0b09c !important; l
   .wordmark { font-size: 21px; }.wordmark-caption { font-size: 8px; margin-left: 13px; padding-left: 13px; }
   .quiet-button { font-size: 10px; }.quiet-button span { margin-left: 5px; }
   .scene-title { left: 29px; bottom: 214px; } h1 { font-size: clamp(56px, 13vw, 80px); margin-top: 22px; }
+  .scene-title { bottom: 325px; } h1 { font-size: clamp(47px, 11vw, 68px); }
+  .forest-clock { bottom: 187px; left: 27px; right: 27px; width: auto; padding: 10px 15px 4px; }
+  .clock-heading output { font-size: 22px; }.forest-clock input { margin-top: 4px; }
   .scene-title p { font-size: 11px; }.eyebrow { font-size: 8px; }
   .deck { flex-direction: column; gap: 8px; left: 23px; right: 23px; bottom: max(44px, calc(env(safe-area-inset-bottom) + 24px)); padding: 12px 0 8px; }
   .atmospheres { justify-content: space-between; width: 100%; }.atmosphere { padding: 0 12px; min-height: 40px; font-size: 10px; }
@@ -87,8 +109,19 @@ dialog .keyboard-note { font-size: 10px !important; color: #a0b09c !important; l
 @media (max-height: 570px) and (min-width: 681px) {
   .masthead { top: 16px; }.scene-title { bottom: 127px; } h1 { font-size: 47px; margin: 14px 0 10px; }
   .deck { bottom: 32px; padding: 9px 0; }.scene-meta { bottom: 12px; }
+  .forest-clock { bottom: 117px; right: 30px; width: 228px; padding: 9px 15px 4px; }
 }
 @media (max-height: 620px) and (max-width: 680px) {
-  .scene-title { bottom: 184px; } h1 { font-size: 46px; margin: 14px 0 12px; }.scene-title p { display: none; }
+  .scene-title { bottom: 308px; } h1 { font-size: 39px; margin: 11px 0 9px; }.scene-title p { display: none; }
+  .forest-clock { bottom: 185px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+@media (max-height: 620px) and (min-width: 540px) and (max-width: 680px) {
+  .masthead { top: 17px; }.scene-title { bottom: 127px; left: 28px; }
+  h1 { font-size: 43px; margin: 15px 0 11px; }.scene-title p { display: none; }
+  .forest-clock { left: auto; right: 26px; bottom: 119px; width: 212px; padding: 9px 13px 4px; }
+  .deck { flex-direction: row; bottom: 32px; padding: 8px 0; gap: 9px; }
+  .atmospheres,.view-controls { width: auto; }.atmosphere { padding: 0 9px; font-size: 9px; }
+  .control { padding: 0 8px; font-size: 9px; gap: 6px; }.immerse { padding-left: 10px; }
+  .scene-meta { bottom: 12px; }
+}
