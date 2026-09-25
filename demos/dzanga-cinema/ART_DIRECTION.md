@@ -4,9 +4,15 @@ A fictional cinematic forest study inspired by the humid lowland forests of the 
 
 ## Image provenance
 
-Generated with the built-in OpenAI image-generation tool for this project. No reference-channel footage or images are used. The user supplied DreamyCinematic68 as a broad atmosphere reference; direct inspection of the channel was unavailable. The prompt below records the actual art direction.
+Generated with the built-in OpenAI image-generation tool for this project. No reference-channel footage or images are used. The user supplied DreamyCinematic68 as a broad atmosphere reference; direct inspection of the channel was unavailable. The original generation prompt is preserved below, and the current neutral edit is recorded in [Version 2 asset prompts](assets/GENERATION.md).
 
-## Generation prompt
+## Current lighting foundation
+
+The runtime scene uses `assets/sangha-neutral.webp` and its smaller responsive alternative, `assets/sangha-neutral-small.webp`. The generated edit preserves the forest composition while replacing the illustrated sun, directional beams and golden highlights with diffuse overcast illumination. This gives the browser's changing solar field a consistent base: time-dependent rays, dapple, color, exposure and water highlights are supplied by the renderer.
+
+The earlier `sangha-forest.webp` and `sangha-forest-small.webp` remain available for provenance, but are not requested by the current page. The neutral image still has diffuse shading, occlusion and water reflections; it is not an albedo map. The scene remains an artistic 2.5D approximation, without ray tracing or geometrically accurate shadow casting.
+
+## Original sunlit plate — generation prompt
 
 Use case: photorealistic-natural.
 Asset type: ultra-wide cinematic background plate for a full-screen living still on a website; generate a single landscape image, 16:9, preferably 2560x1440 or higher.
@@ -24,4 +30,6 @@ Constraints: Congo Basin humid broadleaf rainforest, no pine trees, no European 
 
 ## Movement
 
-Stable trunks and roots anchor the frame. Small water-surface refraction, low drifting mist, sparse insects and restrained canopy movement create independent layers of time. This is a 2.5D living image, not a reconstructed 3D forest.
+Stable trunks and roots anchor the frame. Version 2 makes water refraction and highlights, low mist, wind-driven leaf groups and foreground foliage independently visible. A generated African grey parrot atlas supports perched and flying actors. [Additional asset prompts](assets/GENERATION.md) record that generation. This is a 2.5D living image, not a reconstructed 3D forest.
+
+The [replication methodology](methodology.html) explains source-space regions, lighting approximations, actor registration, shared time, audio event scheduling, performance budgets and verification.
