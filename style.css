@@ -9,8 +9,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #efefbc; outline-offs
 button:disabled { cursor: default; opacity: .45; }
 a { color: inherit; text-decoration: none; }
 a:hover { color: #fff; }
-#forest, #plate, #scene, #fauna, .edge-shade { position: fixed; inset: 0; width: 100%; height: 100%; }
-#fauna { pointer-events: none; }
+#forest, #plate, #scene, #fauna, #path-guides, .edge-shade { position: fixed; inset: 0; width: 100%; height: 100%; }
+#fauna, #path-guides { pointer-events: none; }
 #plate { display: block; object-fit: cover; object-position: 50% 50%; }
 #scene { opacity: 0; transition: opacity 1.4s ease; }
 #scene.ready { opacity: 1; }
@@ -33,15 +33,7 @@ h1 { margin: 24px 0 17px; font-family: Georgia, 'Times New Roman', serif; font-s
 h1 em, h2 em { font-weight: 400; color: #e0e6c9; }
 .scene-title p { font-size: 12px; color: #d3dacb; letter-spacing: .045em; line-height: 1.6; margin: 0; }
 .deck { position: absolute; bottom: 53px; left: 48px; right: 48px; display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 17px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.atmospheres, .view-controls { display: flex; align-items: center; gap: 8px; }
-.atmosphere { display: flex; align-items: center; gap: 9px; min-height: 40px; border: 1px solid transparent; border-radius: 30px; background: transparent; color: #c9d2c4; padding: 0 17px; font-size: 11px; transition: background .3s, color .3s, border-color .3s; }
-.atmosphere:hover { background: #dce5c911; color: white; }
-.atmosphere.selected { background: #e0e7c414; border-color: #e3e9d448; color: #f5f3df; }
-.mood-dot { display: block; width: 5px; height: 5px; border-radius: 50%; background: #d8dfa9; opacity: .45; }
-[data-mood="rain"] .mood-dot { background: #a9c6c0; }
-[data-mood="dusk"] .mood-dot { background: #a3b6d9; }
-[data-hour="dusk"] .mood-dot { background: #a3b6d9; }
-[data-hour="noon"] .mood-dot { background: #e2dcaf; }
+.view-controls { display: flex; align-items: center; gap: 8px; }
 .forest-clock { position: absolute; right: 6.2%; bottom: 159px; width: 248px; padding: 15px 18px 11px; background: #0a1b1266; backdrop-filter: blur(9px); border: 1px solid #e4e8d124; border-radius: 4px; }
 .clock-heading { display: flex; justify-content: space-between; align-items: baseline; }
 .clock-heading label { font-size: 8px; letter-spacing: .20em; color: #ccd6c2; }
@@ -58,7 +50,6 @@ h1 em, h2 em { font-weight: 400; color: #e0e6c9; }
 .volume-control input { min-width: 60px; flex: 1; accent-color: #d8dfb9; }.volume-control output { min-width: 30px; }
 .performance-notes { margin-top: 24px; border-top: 1px solid var(--line); padding-top: 17px; font-size: 10px; color: #b4c4ab; }
 .performance-notes summary { cursor: pointer; }.performance-notes p { font-size: 10px !important; }
-.selected .mood-dot { opacity: 1; }
 .control { border: 0; background: none; height: 40px; padding: 0 13px; display: flex; align-items: center; justify-content: center; gap: 10px; color: #dce2d1; font-size: 11px; white-space: nowrap; }
 .control:hover { color: white; background: #dce5c90c; border-radius: 25px; }
 .icon-control { font-size: 23px; padding: 0 10px; }
@@ -72,6 +63,7 @@ h1 em, h2 em { font-weight: 400; color: #e0e6c9; }
 #return-button { position: fixed; right: 30px; bottom: 27px; padding: 14px 19px; border: 1px solid #ecf1d839; border-radius: 30px; color: #e4e8d9; background: #1020196b; backdrop-filter: blur(12px); font-size: 11px; }
 #return-button span { padding-left: 9px; }
 body.immersed #interface { opacity: 0; pointer-events: none; }
+body.immersed #path-guides { visibility: hidden; }
 body.immersed .edge-shade { opacity: .2; }
 dialog { width: min(530px, calc(100% - 32px)); max-height: calc(100dvh - 36px); padding: 44px; border: 1px solid #e0e7c433; background: #12231df5; color: var(--ivory); box-shadow: 0 24px 100px #0008; }
 dialog::backdrop { background: #07140f70; backdrop-filter: blur(9px); }
@@ -87,7 +79,7 @@ dialog .keyboard-note { font-size: 10px !important; color: #a0b09c !important; l
 @media (max-width: 1000px) {
   .masthead, .deck { left: 28px; right: 28px; }.place { display: none; }
   .scene-title { left: 40px; bottom: 172px; } .control { padding: 0 9px; gap: 7px; }
-  .atmosphere { padding: 0 12px; font-size: 10px; }.view-controls, .atmospheres { gap: 3px; }
+  .view-controls { gap: 3px; }
   .scene-meta { left: 30px; right: 30px; }.immerse { padding-left: 15px; }
 }
 @media (max-width: 680px) {
@@ -100,7 +92,6 @@ dialog .keyboard-note { font-size: 10px !important; color: #a0b09c !important; l
   .clock-heading output { font-size: 22px; }.forest-clock input { margin-top: 4px; }
   .scene-title p { font-size: 11px; }.eyebrow { font-size: 8px; }
   .deck { flex-direction: column; gap: 8px; left: 23px; right: 23px; bottom: max(44px, calc(env(safe-area-inset-bottom) + 24px)); padding: 12px 0 8px; }
-  .atmospheres { justify-content: space-between; width: 100%; }.atmosphere { padding: 0 12px; min-height: 40px; font-size: 10px; }
   .view-controls { justify-content: space-between; width: 100%; gap: 0; }.control { padding: 0 13px; font-size: 10px; }
   .scene-meta { bottom: max(21px, env(safe-area-inset-bottom)); left: 25px; right: 25px; font-size: 7px; letter-spacing: .13em; }
   .scene-meta span:last-child { letter-spacing: .1em; }
@@ -121,7 +112,36 @@ dialog .keyboard-note { font-size: 10px !important; color: #a0b09c !important; l
   h1 { font-size: 43px; margin: 15px 0 11px; }.scene-title p { display: none; }
   .forest-clock { left: auto; right: 26px; bottom: 119px; width: 212px; padding: 9px 13px 4px; }
   .deck { flex-direction: row; bottom: 32px; padding: 8px 0; gap: 9px; }
-  .atmospheres,.view-controls { width: auto; }.atmosphere { padding: 0 9px; font-size: 9px; }
+  .view-controls { width: auto; }
   .control { padding: 0 8px; font-size: 9px; gap: 6px; }.immerse { padding-left: 10px; }
   .scene-meta { bottom: 12px; }
+}
+.direct-button { border: 1px solid #dfe8c74a; border-radius: 24px; padding: 0 18px; }
+.sticker-panel { position: absolute; z-index: 3; top: 90px; left: 32px; bottom: 140px; width: 300px; overflow-y: auto; padding: 24px; border: 1px solid #dce7cd35; border-radius: 5px; background: #11231def; box-shadow: 0 12px 55px #06140a55; scrollbar-width: thin; }
+.sticker-panel .close-button { top: 7px; right: 9px; }
+.sticker-panel .eyebrow { font-size: 8px; margin: 1px 0 0; }
+.sticker-panel h2 { font-size: 33px; margin: 20px 0 14px; }
+.sticker-intro { color: #c6d1bf; font-size: 11px; line-height: 1.65; }
+.sticker-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 20px 0; }
+.sticker-actions button { min-height: 47px; text-align: left; padding: 8px 10px; border: 1px solid #dce7cd33; border-radius: 3px; background: #dce7cd09; font-size: 11px; line-height: 1.45; }
+.sticker-actions button:hover { background: #dce7cd19; }
+.director-toggle { width: 100%; padding: 11px 0; margin-top: 13px; border: 0; border-top: 1px solid var(--line); background: none; text-align: left; font-size: 11px; }
+.director-toggle::before { content: '○'; margin-right: 9px; color: #d1dbb2; }.director-toggle[aria-pressed="true"]::before { content: '●'; }
+.director-note { color: #a8bba1; font-size: 10px; line-height: 1.65; margin: 0 0 12px; }
+.flow-control { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 10px; }.flow-control input { width: 105px; accent-color: #d8dfb9; }.flow-control output { margin-left: auto; }
+.guide-control { display: flex; align-items: center; gap: 7px; font-size: 10px; }.guide-control input { accent-color: #d8dfb9; }
+.command-status { min-height: 30px; color: #e5eac8; font-size: 10px; line-height: 1.6; }
+#world-details { font-size: 10px; color: #b8c9b2; border-top: 1px solid var(--line); padding: 11px 0; }#world-details summary { cursor: pointer; }
+#world-readout { white-space: pre-wrap; overflow-wrap: anywhere; font: 10px/1.6 ui-monospace,monospace; }
+.sticker-method { font-size: 10px; color: #e4e9c7; line-height: 1.6; }
+body.directing .scene-title { opacity: 0; pointer-events: none; }
+@media(max-width:680px) {
+  .direct-button { width: 100%; min-height: 36px; }
+  .sticker-panel { top: 80px; left: 22px; right: 22px; bottom: 178px; width: auto; padding: 18px; }
+  .sticker-panel h2 { font-size: 27px; margin: 17px 0 10px; }
+  body.directing .forest-clock { visibility: hidden; }
+}
+@media(max-height:620px) and (min-width:540px) {
+  .sticker-panel { top: 65px; bottom: 110px; width: 290px; left: 24px; right: auto; }
+  .direct-button { width: auto; }
 }

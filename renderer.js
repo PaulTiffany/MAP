@@ -21,6 +21,8 @@ uniform vec2 uResolution, uImageSize, uPointer;
 uniform vec4 uEnvironment; // time, hour, rain, wind
 uniform vec3 uStream; // center, horizon, spread
 uniform vec4 uBough; // origin.xy, size.xy
+uniform vec2 uWater; // integrated water phase, flow energy
+uniform vec4 uRipples[4]; // source x/y, age in seconds (-1 unused), strength
 uniform float uFoliageReady, uOverscan;
 
 float hash(vec2 p) { return fract(sin(dot(fract(p*.031),vec2(127.1,311.7)))*HASH_SCALE); }
@@ -78,11 +80,23 @@ void main() {
               *smoothstep(uStream.y,.655,p.y);
   water*=1.-smoothstep(.565,.65,p.x)*(1.-smoothstep(.70,.82,p.y));
   vec2 q=vec2((p.x-uStream.x)*6.,(p.y-uStream.y)*4.);
-  float height=waveHeight(q,t);
-  vec2 slope=vec2(waveHeight(q+vec2(.025,0.),t)-height,
-                 waveHeight(q+vec2(0.,.025),t)-height)/.025;
-  vec2 refraction=vec2(height*.0045,sin(q.x*14.+q.y*36.-t*1.8)*.0016);
-  refraction*=water*(.18+.82*downstream)*(1.+rain*.35);
+  float waterTime=uWater.x, energy=.25+uWater.y*.75;
+  float height=waveHeight(q,waterTime);
+  vec2 slope=vec2(waveHeight(q+vec2(.025,0.),waterTime)-height,
+                 waveHeight(q+vec2(0.,.025),waterTime)-height)/.025;
+  vec2 refraction=vec2(height*.0045,sin(q.x*14.+q.y*36.-waterTime*1.8)*.0016);
+  refraction*=water*(.18+.82*downstream)*(1.+rain*.35)*energy;
+  float impactLight=0.;
+  for(int i=0;i<4;i++) {
+    vec4 ripple=uRipples[i];
+    if(ripple.z>=0.&&ripple.z<4.) {
+      vec2 d=(p-ripple.xy)*vec2(1.,2.8);
+      float distance=length(d), edge=distance-ripple.z*.027;
+      float wave=sin(edge*270.)*exp(-abs(edge)*75.)*(1.-ripple.z/4.)*ripple.w;
+      refraction+=d/max(.008,distance)*wave*vec2(.0015,.0006)*water;
+      impactLight+=wave*.095*water;
+    }
+  }
   vec3 color=photograph(p+canopy+refraction);
   color=lightGrade(color,daylight,warmth,rain);
 
@@ -106,7 +120,8 @@ void main() {
   float glint=pow(max(dot(normal,halfway),0.),48.);
   float reflectionLane=exp(-abs(p.x-(uStream.x+(sun.x-.5)*downstream*.65))*12.);
   color+=sunColor*glint*water*downstream*reflectionLane*daylight*.15;
-  color+=vec3(.020,.027,.026)*water*sin(q.y*64.-t*3.+sin(q.x*22.))*.45;
+  color+=vec3(.020,.027,.026)*water*sin(q.y*64.-waterTime*3.+sin(q.x*22.))*.45*energy;
+  color+=vec3(.73,.82,.70)*impactLight*(.25+.75*daylight);
 
   // Rain-drop rings and occasional canopy drips disturb the stream, not its banks.
   for(int i=0;i<4;i++) {
@@ -115,7 +130,7 @@ void main() {
     vec2 d=(p-center)*vec2(1.,2.8);
     float radius=life*.065;
     float ring=exp(-abs(length(d)-radius)*1800.)*(1.-life)*smoothstep(0.,.09,life);
-    color+=vec3(.10,.12,.11)*ring*water*(.25+.75*rain);
+    color+=vec3(.10,.12,.11)*ring*water*rain;
   }
 
   float fog=cloud(vec2(p.x*5.-t*.030,p.y*8.+t*.012));
@@ -170,7 +185,7 @@ export function createRenderer(canvas, plate) {
   gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
   const position=gl.getAttribLocation(program,'aPosition');
   gl.enableVertexAttribArray(position);gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
-  const names=['uImage','uFoliage','uResolution','uImageSize','uPointer','uEnvironment','uStream','uBough','uFoliageReady','uOverscan'];
+  const names=['uImage','uFoliage','uResolution','uImageSize','uPointer','uEnvironment','uStream','uBough','uFoliageReady','uOverscan','uWater','uRipples[0]'];
   const uniforms=Object.fromEntries(names.map(name=>[name,gl.getUniformLocation(program,name)]));
   function texture(unit,image) {
     const tex=gl.createTexture();resources.push(tex);
@@ -191,6 +206,7 @@ export function createRenderer(canvas, plate) {
   gl.uniform3f(uniforms.uStream,forestConfig.stream.center,forestConfig.stream.horizon,forestConfig.stream.spread);
   gl.uniform4f(uniforms.uBough,...forestConfig.foliage.origin,...forestConfig.foliage.size);
   let disposed=false, loaded=false;
+  const rippleData=new Float32Array(16);
   return {
     async loadFoliage() {
       const image=new Image();image.src=forestConfig.assets.foliage;
@@ -201,7 +217,7 @@ export function createRenderer(canvas, plate) {
         loaded=true;
       } catch { /* Main forest remains complete if optional foliage is unavailable. */ }
     },
-    draw({time,hour,rain,wind,pointer,pixelBudget}) {
+    draw({time,hour,rain,wind,pointer,pixelBudget,waterTime=time,effects={}}) {
       const ratio=Math.min(devicePixelRatio||1,1.5,Math.sqrt(pixelBudget/(innerWidth*innerHeight)));
       const width=Math.max(1,Math.round(innerWidth*ratio)),height=Math.max(1,Math.round(innerHeight*ratio));
       if(canvas.width!==width||canvas.height!==height) {
@@ -210,6 +226,12 @@ export function createRenderer(canvas, plate) {
       gl.uniform2f(uniforms.uResolution,width,height);
       gl.uniform2f(uniforms.uPointer,...pointer);
       gl.uniform4f(uniforms.uEnvironment,time,hour,rain,wind);
+      gl.uniform2f(uniforms.uWater,waterTime,effects.flow??1);
+      for(let i=0;i<4;i++) {
+        const ripple=effects.ripples?.[i];
+        rippleData.set(ripple?[ripple.x,ripple.y,ripple.age,ripple.strength]:[0,0,-1,0],i*4);
+      }
+      gl.uniform4fv(uniforms['uRipples[0]'],rippleData);
       gl.uniform1f(uniforms.uFoliageReady,loaded?1:0);
       gl.drawArrays(gl.TRIANGLES,0,6);
     },

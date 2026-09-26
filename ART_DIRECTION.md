@@ -26,10 +26,18 @@ Constraints: Congo Basin humid broadleaf rainforest, no pine trees, no European 
 ## Landscape reference
 
 - [UNESCO: Sangha Trinational](https://whc.unesco.org/en/list/1380/) — humid tropical forest, wetlands and forest openings across Cameroon, the Central African Republic and the Republic of Congo.
-- See the existing [cultural grounding](../dzanga/CULTURAL_GROUNDING.md) for the project's representation boundaries.
+- See the existing [cultural grounding](demos/dzanga/CULTURAL_GROUNDING.md) for the project's representation boundaries.
 
 ## Movement
 
 Stable trunks and roots anchor the frame. Version 2 makes water refraction and highlights, low mist, wind-driven leaf groups and foreground foliage independently visible. A generated African grey parrot atlas supports perched and flying actors. [Additional asset prompts](assets/GENERATION.md) record that generation. This is a 2.5D living image, not a reconstructed 3D forest.
 
 The [replication methodology](methodology.html) explains source-space regions, lighting approximations, actor registration, shared time, audio event scheduling, performance budgets and verification.
+
+## Sticker-book study
+
+The forest is now the [MAP home scene](https://paultiffany.github.io/MAP/). Reusable animation assets, placed instances, scene paths and decision policy are being separated so the same image treatment can support other places. “Sticker” means a composited object with an anchor, scale, depth and named actions; it does not require an illustrated outline or a paper-cutout appearance.
+
+The existing generated plate, bough and parrot atlas remain the visual foundation. This pass adds a photographic-style transparent leaf cutout, generated with the built-in image tool and compressed to a 512 × 512 WebP (42,566 bytes). Its full prompt is in the [asset record](assets/GENERATION.md). Ripples and the small butterfly are procedural. A leaf can tumble, touch water and float; a bird can follow a named flight path and call. The aim is distinct, legible behaviors, not applying more parallax to the entire still.
+
+Reuse an asset only after reauthoring its placement, light treatment and movement constraints for the new scene. The present renderer has scene-specific masks and no general geometric occlusion or shadow system. The [runtime contract](lib/sticker-world/README.md) explains what can be directed today and what remains future work.

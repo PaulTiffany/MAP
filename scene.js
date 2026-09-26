@@ -2,20 +2,47 @@ import { createSoundscape } from './sound.js';
 import { createRenderer } from './renderer.js';
 import { createFauna } from './fauna.js';
 import { forestConfig, formatHour, createQualityController } from './scene-config.js';
+import { createWorld } from './lib/sticker-world/world.js';
+import { createDirector } from './lib/sticker-world/director.js';
+import { forestManifest } from './world-manifest.js';
+import { createWorldUI } from './world-ui.js';
 
 const $=id=>document.getElementById(id);
 const canvas=$('scene'), plate=$('plate'), motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
 const soundscape=createSoundscape();
 const mobile=matchMedia('(pointer: coarse)').matches || innerWidth<700;
 const quality=createQualityController(mobile?forestConfig.pixels.mobile:forestConfig.pixels.desktop);
-const fauna=createFauna($('fauna'),{onCall:event=>{if(soundWanted&&!paused&&!document.hidden)soundscape.cue(event);}});
+const fauna=createFauna($('fauna'));
 let renderer=null, contextLost=false, initialized=false;
 let paused=motionPreference.matches, soundWanted=false, soundBusy=false, immersed=false;
-let time=0, hour=forestConfig.hours.initial, targetHour=hour, rain=0, targetRain=0;
+let time=0, waterTime=0, hour=forestConfig.hours.initial, targetHour=hour, rain=0, targetRain=0;
 let cycle=false, cycleTime=0, wind=.65, pointer=[0,0], easedPointer=[0,0];
 let frame=0, lastTime=0, deadline=0, lastTelemetry=0;
 let timingStart=0, paints=0, observedFps=0, submitSum=0, averageSubmit=0;
 let lastEnvironmentTime=-Infinity;
+const world=createWorld(forestManifest,{onEvent:event=>{
+  if(event.type==='call'&&soundWanted&&!paused&&!document.hidden) soundscape.cue(event);
+}});
+const director=createDirector(world,forestManifest);
+const environment=()=>({hour,rain,wind,paused:paused||document.hidden});
+world.update(time,environment());
+
+// Local, inspectable command boundary. No secrets, remote evaluation or network.
+// A future controller can replace the ambient policy without replacing rendering.
+function dispatch(command) {
+  if(!renderer||document.hidden) return {ok:false,reason:'unavailable',revision:world.frame().revision};
+  world.update(time,environment());
+  const receipt=world.dispatch(command);
+  if(receipt.ok) {director.setEnabled(false);requestFrame();}
+  return receipt;
+}
+function setDirectorEnabled(enabled) {
+  director.setEnabled(enabled);requestFrame();
+  return {enabled:director.isEnabled};
+}
+const api=Object.freeze({observe:()=>({...world.observe(),directorEnabled:director.isEnabled}),dispatch,setDirectorEnabled});
+globalThis.stickerWorld=api;
+const worldUI=createWorldUI({manifest:forestManifest,...api,isDirectorEnabled:()=>director.isEnabled,requestFrame});
 
 function announce(message) { $('status').textContent=message; }
 function updateClock() {
@@ -23,10 +50,6 @@ function updateClock() {
   $('hour-label').value=formatted;
   $('hour').value=String(hour);
   $('hour').setAttribute('aria-valuetext',formatted);
-  document.querySelectorAll('[data-hour]').forEach(button=>{
-    const selected=Math.abs(targetHour-forestConfig.presets[button.dataset.hour])<.08&&!cycle;
-    button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));
-  });
   $('cycle-button').setAttribute('aria-pressed',String(cycle));
   $('cycle-button').firstChild.textContent=cycle?'Day is passing ':'Let the day pass ';
 }
@@ -46,10 +69,13 @@ function updateFallback() {
 function draw(recordFrame=false) {
   if(!renderer) return;
   const start=performance.now();
-  renderer.draw({time,hour,rain,wind,pointer:easedPointer,pixelBudget:quality.pixels});
+  world.update(time,environment());director.update();
+  const worldFrame=world.frame(), sceneWind=Math.min(2,wind+worldFrame.effects.gust*.9);
+  renderer.draw({time,hour,rain,wind:sceneWind,pointer:easedPointer,pixelBudget:quality.pixels,waterTime,effects:worldFrame.effects});
   const aspect=innerWidth/innerHeight;
   const cover=[Math.min(1,aspect/forestConfig.imageAspect),Math.min(1,forestConfig.imageAspect/aspect)];
-  fauna.draw({time,hour,rain,wind,paused:paused||document.hidden,width:innerWidth,height:innerHeight,cover,pointer:easedPointer,quality:quality.pixels/forestConfig.pixels.desktop});
+  fauna.draw({time:worldFrame.time,hour,rain,wind:sceneWind,paused:paused||document.hidden,width:innerWidth,height:innerHeight,cover,pointer:easedPointer,quality:quality.pixels/forestConfig.pixels.desktop,worldFrame});
+  worldUI.drawGuides({cover,pointer:easedPointer});
   if(recordFrame) {submitSum+=performance.now()-start;paints++;}
   canvas.classList.add('ready');
 }
@@ -68,6 +94,7 @@ function telemetry(now,force=false) {
   const label=paused?'Paused':`${observedFps.toFixed(1)} fps observed / 30 fps target`;
   $('performance-readout').textContent=`${label} · ${canvas.width} × ${canvas.height} render surface · ${(quality.pixels/1e6).toFixed(2)} MP cap · ${averageSubmit.toFixed(1)} ms average CPU submission (not GPU time).`;
   updateClock();
+  worldUI.refresh();
 }
 function requestFrame() {
   if(!frame&&!document.hidden&&renderer) frame=requestAnimationFrame(tick);
@@ -81,6 +108,7 @@ function tick(now) {
   const dt=Math.min(wall/1000,.15);lastTime=now;
   if(!paused) {
     time+=dt;
+    waterTime+=dt*world.frame().effects.flow;
     quality.sample(wall,time);
     if(cycle) {
       cycleTime+=dt;
@@ -157,6 +185,7 @@ async function toggleSound() {
   } finally {soundBusy=false;$('sound-button').disabled=false;}
 }
 function setImmersed(value) {
+  worldUI.close();
   immersed=value;document.body.classList.toggle('immersed',value);
   $('interface').inert=value;$('return-button').hidden=!value;
   (value?$('return-button'):$('immerse-button')).focus({preventScroll:true});
@@ -171,6 +200,7 @@ function fallback(message) {
   renderer?.destroy();renderer=null;canvas.classList.remove('ready');
   $('fauna').hidden=true;updateFallback();updateMotion();
   $('cycle-button').disabled=true;
+  worldUI.setAvailable(false);
   $('performance-readout').textContent='Static fallback; no animation loop is running.';
   announce(message);
 }
@@ -178,14 +208,13 @@ async function initialize() {
   try {
     await plate.decode();
     const current=createRenderer(canvas,plate);renderer=current;
-    $('fauna').hidden=false;$('cycle-button').disabled=false;updateMotion();requestFrame();
+    $('fauna').hidden=false;$('cycle-button').disabled=false;worldUI.setAvailable(true);updateMotion();requestFrame();
     await Promise.all([current.loadFoliage(),initialized?Promise.resolve():fauna.load()]);
     initialized=true;
     if(renderer===current) {draw();requestFrame();}
   } catch {fallback('The forest is displayed as a still image. Animated graphics are unavailable.');}
 }
 
-document.querySelectorAll('[data-hour]').forEach(button=>button.addEventListener('click',()=>setHour(forestConfig.presets[button.dataset.hour])));
 $('hour').addEventListener('input',event=>setHour(Number(event.target.value)));
 $('cycle-button').addEventListener('click',toggleCycle);
 $('rain-button').addEventListener('click',toggleRain);
@@ -229,6 +258,7 @@ motionPreference.addEventListener('change',event=>{
 document.addEventListener('visibilitychange',async()=>{
   cancelAnimationFrame(frame);frame=0;lastTime=deadline=0;quality.reset();fauna.resetEvents(time);
   timingStart=0;paints=0;submitSum=0;
+  world.update(time,environment());
   if(document.hidden) {await soundscape.stop();}
   else {
     requestFrame();

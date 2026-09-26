@@ -17,9 +17,13 @@ It does **not** assume cooperation automatically wins. The formal work studies w
 
 ### See it
 
-**[The listening forest](https://paultiffany.github.io/MAP/demos/dzanga-cinema/)** — a cinematic Congo Basin forest study: an original generated scene with slow water, mist, canopy movement, three atmospheres, and optional synthesized sound. [Scene notes](demos/dzanga-cinema/README.md).
+**[Enter MAP — The listening forest](https://paultiffany.github.io/MAP/)** — the first living scene in an emerging “sticker book”: a photographic-style setting with individually addressable animation objects, shared paths, changing daylight and optional sound. Humans and future agents use the same bounded command interface. The present ambient director is seeded local software, not an AI agent.
 
-**[Interactive MAP](https://paultiffany.github.io/MAP/)** · **[Formal core](FORMAL.md)** · **[Provenance](PROVENANCE.md)** · **[Machine-readable MAP](map.json)**
+[Scene notes](SCENE.md) · [Replication methodology](methodology.html) · [Agent/runtime contract](lib/sticker-world/README.md)
+
+The scene now lives at the project root; its former demo route is removed. The previous home experience remains in Git history. The research records below are preserved independently of this interface experiment.
+
+**[Formal core](FORMAL.md)** · **[Provenance](PROVENANCE.md)** · **[Machine-readable MAP](map.json)**
 
 > **Advantage is not enough. Progress has to transfer through the dynamics.**
 

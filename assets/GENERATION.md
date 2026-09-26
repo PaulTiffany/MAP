@@ -1,4 +1,17 @@
-# Version 2 asset provenance
+# Generated asset provenance
+
+## Sticker-book pass: reusable fallen leaf
+
+File: `forest-leaf.webp` — 512 × 512 with transparency. Generated using the built-in OpenAI image-generation tool; source output `exec-30fcca14-ac2b-4c9d-8db9-79e8593dfbd3.png`. WebP quality 88, compression level 6. The renderer uses this one cutout for falling, tumbling and floating states; those animations are code-driven, not generated video.
+
+Full generation prompt:
+
+```text
+Use case: photorealistic-natural.
+Asset type: one reusable transparent forest leaf sprite for a photographic living-scene sticker library.
+Primary request: a single fallen tropical broadleaf, elliptical lanceolate shape with a pointed tip and short delicate stem. Rich natural ochre-brown with a little olive green near the stem, fine visible veins, gently curled edge, small real imperfections. Photographic botanical texture, soft neutral diffuse forest lighting, no specular glare. View almost straight down at the broad face so the silhouette is useful for a tumbling and floating animation.
+Composition: square canvas, ONE leaf centered diagonally from bottom-left stem to upper-right tip, full object visible with 15 percent transparent padding. Genuinely transparent alpha background, clean fine edges, no cast shadow, no scene or surface, no water, no extra leaves, no text, no border, no checkerboard. This is a small real botanical cutout, not an icon or cartoon.
+```
 
 ## Diffuse-light forest base
 
