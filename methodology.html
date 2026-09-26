@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10251d">
+  <meta name="description" content="A replicable methodology for living sticker-book scenes: shared objects, paths, validated direction, photographic-style art and performance-first rendering on GitHub Pages.">
+  <title>From a living still to a sticker book · MAP</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root { color-scheme:light; --ink:#173b2a; --body:#334b3e; --paper:#f4f2e9; --muted:#627365; --line:#d6ddcd; --leaf:#396746; }
+    * { box-sizing:border-box; }
+    html { scroll-padding-top:2rem; }
+    body { margin:0; background:var(--paper); color:var(--body); font:16px/1.75 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:var(--leaf); text-decoration-thickness:1px; text-underline-offset:4px; overflow-wrap:anywhere; }
+    a:hover { color:#172f20; }
+    :focus-visible { outline:3px solid #99a841; outline-offset:5px; }
+    .skip { position:absolute; top:1rem; left:1rem; transform:translateY(-200%); background:white; padding:.75rem; z-index:2; }
+    .skip:focus { transform:none; }
+    .mast { display:flex; gap:1.5rem; align-items:center; justify-content:space-between; width:min(1120px,calc(100% - 64px)); margin:auto; padding:1.45rem 0; border-bottom:1px solid var(--line); }
+    .mark { color:var(--ink); font:1.6rem Georgia,"Times New Roman",serif; letter-spacing:.18em; text-decoration:none; }
+    .return { font-size:.84rem; text-decoration:none; }
+    .hero { width:min(1000px,calc(100% - 64px)); margin:auto; padding:5.25rem 0 3.1rem; }
+    .eyebrow { color:var(--leaf); font-size:.68rem; font-weight:650; letter-spacing:.22em; text-transform:uppercase; }
+    h1 { color:var(--ink); font:400 clamp(3rem,7vw,5.6rem)/1.04 Georgia,"Times New Roman",serif; letter-spacing:-.047em; margin:1.35rem 0 1.9rem; max-width:860px; }
+    .standfirst { max-width:740px; font:1.42rem/1.65 Georgia,"Times New Roman",serif; }
+    .byline { font-size:.78rem; color:var(--muted); margin:1.8rem 0 0; }
+    .article-links { display:flex; flex-wrap:wrap; gap:.6rem 1.8rem; margin-top:.7rem; font-size:.82rem; }
+    .layout { display:grid; grid-template-columns:150px minmax(0,1fr); gap:3.3rem; width:min(1000px,calc(100% - 64px)); margin:0 auto 5rem; border-top:1px solid var(--line); padding-top:2.8rem; }
+    nav { align-self:start; position:sticky; top:1.5rem; font-size:.75rem; line-height:1.55; }
+    nav p { margin:0 0 1rem; color:var(--muted); font-size:.64rem; letter-spacing:.17em; text-transform:uppercase; }
+    nav a { display:block; text-decoration:none; padding:.43rem 0; }
+    article { min-width:0; }
+    section { margin-bottom:3.7rem; }
+    section+section { border-top:1px solid var(--line); padding-top:2rem; }
+    h2 { color:var(--ink); font:400 1.85rem/1.3 Georgia,"Times New Roman",serif; letter-spacing:-.025em; margin:0 0 1.35rem; }
+    h3 { color:var(--ink); font-size:1.05rem; font-weight:620; margin:2rem 0 .7rem; }
+    p { margin:0 0 1.2rem; }
+    strong { color:var(--ink); font-weight:650; }
+    code { color:#27563e; font: .82em ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+    p code,li code,td code { background:#e8edde; padding:.13rem .3rem; border-radius:3px; }
+    pre { margin:1.7rem 0; padding:1.3rem 1.45rem; background:#152a21; border-radius:4px; overflow:auto; line-height:1.65; }
+    pre code { color:#d8e4c9; font-size:.76rem; overflow-wrap:normal; white-space:pre; }
+    .table-scroll { overflow:auto; margin:1.7rem 0; border:1px solid var(--line); border-radius:3px; }
+    table { border-collapse:collapse; width:100%; text-align:left; font-size:.82rem; line-height:1.65; }
+    th,td { padding:.9rem 1rem; vertical-align:top; min-width:128px; }
+    th { background:#e8edde; color:var(--ink); font-weight:650; }
+    td { border-top:1px solid var(--line); }
+    td:first-child { color:var(--ink); font-weight:580; width:24%; }
+    ol,ul { margin:1.5rem 0; padding-left:1.4rem; }
+    li { padding-left:.4rem; margin-bottom:1rem; }
+    li::marker { color:#648052; }
+    footer { color:#dce4d2; background:#12271e; padding:2.3rem max(32px,calc((100% - 1000px)/2)); }
+    footer p { font:1.6rem Georgia,serif; color:#edf0e2; margin:0 0 .4rem; }
+    footer a { color:#c8dcab; font-size:.87rem; }
+    @media(max-width:760px) {
+      .mast,.hero,.layout { width:calc(100% - 40px); }
+      .hero { padding:3rem 0 2.2rem; }
+      .standfirst { font-size:1.22rem; }
+      .layout { display:block; padding-top:1.7rem; }
+      nav { position:static; display:flex; flex-wrap:wrap; gap:.3rem 1rem; padding-bottom:1.6rem; margin-bottom:2rem; border-bottom:1px solid var(--line); }
+      nav p { width:100%; margin-bottom:.2rem; }
+      nav a { padding:.3rem 0; }
+      h2 { font-size:1.65rem; }
+      table { min-width:490px; }
+      pre { padding:1rem; }
+      section { margin-bottom:2.8rem; }
+    }
+    @media print {
+      body { background:white; font-size:10pt; color:black; }
+      .mast,.hero,.layout { width:100%; }
+      .hero { padding:1rem 0; }
+      h1 { font-size:36pt; }
+      .layout { display:block; margin:0; padding-top:1rem; }
+      nav,.skip,footer,.article-links,.return { display:none; }
+      section+section { padding-top:1rem; }
+      section { margin-bottom:1.5rem; }
+      h2,h3 { break-after:avoid; }
+      pre { background:#f0f2eb; break-inside:avoid; }
+      pre code { color:black; white-space:pre-wrap; }
+      .table-scroll { overflow:visible; }
+      table { min-width:0; font-size:9pt; }
+      tr { break-inside:avoid; }
+      a { color:inherit; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#article">Skip to methodology</a>
+  <header class="mast"><a class="mark" href="./" aria-label="MAP home">MAP</a><a class="return" href="./">← Return to the forest</a></header>
+  <div class="hero">
+    <div class="eyebrow">Field notes / Sangha / Study 03</div>
+    <h1>From a living still<br>to a <em>sticker book.</em></h1>
+    <p class="standfirst">Keep the photographic world. Give its objects names, paths and actions. Let people—and eventually agents—direct them through the same small, inspectable interface.</p>
+    <p class="byline">Implementation methodology · GPT-6 / Codex</p>
+    <div class="article-links"><a href="METHODOLOGY.md" download>Download the complete Markdown methodology</a><a href="lib/sticker-world/README.md">Agent/runtime contract</a><a href="ART_DIRECTION.md">Artwork provenance &amp; prompts</a></div>
+  </div>
+  <div class="layout">
+    <nav aria-label="Article contents"><p>In this document</p><a href="#architecture">01 · Architecture</a><a href="#separation">02 · Responsibilities</a><a href="#protocol">03 · Direction protocol</a><a href="#motion">04 · Motion vocabulary</a><a href="#coordinates">05 · Coordinates &amp; art</a><a href="#sound">06 · Sound</a><a href="#performance">07 · Budgets &amp; evidence</a><a href="#replicate">08 · Replication &amp; future</a><a href="#checks">09 · Acceptance checks</a><a href="#sources">Scope &amp; sources</a></nav>
+    <article id="article">
+      <section id="architecture"><h2>1. The architectural choice</h2>
+        <p>Start with a strong, fixed composition. Preserve its photographic detail, then spend rendering work on water, changing light, leaves, mist and occasional animals. This is a <strong>2.5D scene</strong>, not a reconstructed 3D forest. Its composited “stickers” have names, anchors, scale, depth and actions; a sticker need not look like paper or have an illustrated outline.</p>
+        <p>The architectural change is separating <strong>what exists, where it belongs, what it is doing, who chooses its next action, and how it is drawn</strong>. The forest is the first test case, not the limit. A future city could reuse the control/lifecycle pattern while supplying new assets, paths, actions and rendering adapters.</p>
+        <p>GitHub Pages serves ordinary static files; the visitor's browser does the work. No backend, streaming video, remote inference, framework, dependencies or build step is required. The implementation now lives at <a href="https://paultiffany.github.io/MAP/">the MAP root</a>. The former forest demo route is removed, not redirected. Relative asset/import paths support both local <code>/</code> and deployed <code>/MAP/</code>.</p>
+        <p><strong>Implemented:</strong> an in-page control boundary and a seeded local ambient director. <strong>Not implemented:</strong> an AI agent, authenticated agent service, multiplayer, persistence, general world editor or arbitrary-script loader. Those future systems can use this boundary without owning the rendering loop.</p>
+      </section>
+      <section id="separation"><h2>2. Separate five responsibilities</h2>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Architecture responsibilities"><table><thead><tr><th scope="col">Responsibility</th><th scope="col">Current home</th><th scope="col">Meaning</th></tr></thead><tbody>
+          <tr><td>Catalog</td><td><code>lib/sticker-world/catalog.js</code></td><td>Reusable types and permitted actions—not placement in this forest.</td></tr>
+          <tr><td>Manifest</td><td><code>world-manifest.js</code></td><td>Named instances, scene-owned paths and direction settings.</td></tr>
+          <tr><td>Runtime state</td><td><code>lib/sticker-world/world.js</code></td><td>Actions, transitions, validation, revisions, receipts and bounded history.</td></tr>
+          <tr><td>Decision policy</td><td><code>lib/sticker-world/director.js</code>, human controls, future adapter</td><td>Chooses which allowed action to request; does not alter renderer internals.</td></tr>
+          <tr><td>Rendering adapter</td><td><code>renderer.js</code>, <code>fauna.js</code>, <code>sound.js</code></td><td>Turns current state into materials, sprites and optional sound.</td></tr>
+        </tbody></table></div>
+        <pre tabindex="0"><code>human “Direct scene” panel ─┐
+seeded ambient director ────┼─ validated command → state + receipt
+future external adapter ───┘                         │
+                                            shared scene clock
+                                                   │
+                          WebGL materials + 2D stickers + audio</code></pre>
+        <p>This is a reusable core with a forest adapter, not an already generic engine for every scene. Canopy ellipses, stream masks, log exclusions, shader lighting and drawing details remain scene-specific. A new scene reauthors those or supplies another adapter. A catalog entry is not an asset pipeline, collision geometry or a complete renderer.</p>
+      </section>
+      <section id="protocol"><h2>3. A small, inspectable direction protocol</h2>
+        <p>The page exposes <code>window.stickerWorld</code>. Integrations should <strong>observe → choose → dispatch → inspect receipt → observe again</strong>. The optional <strong>Direct scene</strong> panel uses the same route for people. The <a href="lib/sticker-world/README.md">runtime contract</a> includes exact exports, object IDs, argument bounds and copyable examples.</p>
+        <p>A command names an <code>id</code>, <code>object</code>, <code>action</code>, optional bounded <code>args</code> and optional <code>expectedRevision</code>. Types, objects, actions, paths, numeric bounds and state constraints are checked before mutation. Unknown paths do not become arbitrary routes. Command data cannot supply code, asset URLs, network targets or a renderer.</p>
+        <p><code>observe()</code> returns detached state. Receipts report success/failure, a rejection reason where relevant and revision. Successful IDs are cached in a 128-entry window: an identical retry returns its original receipt; a changed payload with the same ID fails with <code>id-conflict</code>. Rejections do not mutate state. This is bounded retry protection, not durable exactly-once delivery; an evicted ID may be accepted again.</p>
+        <p><code>expectedRevision</code> checks accepted-command <em>and lifecycle</em> changes. On a stale revision, observe and reconsider instead of blindly retrying. History is capped at 64 entries, not a persistent event store. Reloading creates a new local world.</p>
+        <p>The seeded ambient director also sends validated commands. Repeatable local scheduling is useful for tests but is not AI. A future remote adapter needs authority, rate limits and arbitration before several people or services can share the scene safely.</p>
+        <p>An accepted manual/external command switches off new ambient choices; active actions finish. The visitor can resume the director explicitly. New commands are rejected while paused; the page adapter also rejects them while hidden or without animated graphics. This in-page API is an integration contract, not a security boundary against other JavaScript already on the page.</p>
+      </section>
+      <section id="motion"><h2>4. One clock, many kinds of movement</h2>
+        <p><code>scene.js</code> owns the presentation loop and advances scene time only while motion is enabled. The world, policy and renderers share it. Stickers do not create independent loops. Animal events carry stable IDs; audio deduplicates them.</p>
+        <p>Daylight is a separate value: the 06:00–19:30 slider changes light without speeding wingbeats. Redundant preset buttons are removed. “Let the day pass” advances the daylight span over 180 seconds, continues from the selected hour and stops at dusk. Rain is independent.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Distinct animation behaviors"><table><thead><tr><th scope="col">Motion</th><th scope="col">What changes</th><th scope="col">Constraint</th></tr></thead><tbody>
+          <tr><td>Parrot flight/call</td><td>Registered wing poses follow a named route; a call is an event.</td><td>Stable body anchors and scale authored for the clearing.</td></tr>
+          <tr><td>Leaf release/contact/drift</td><td>A leaf tumbles, touches water, produces a ring and floats.</td><td>An authored contact transition, not general collision physics.</td></tr>
+          <tr><td>Ripple</td><td>An expanding, fading ring begins at a bounded water position.</td><td>Moves on the stream surface, not across the entire still.</td></tr>
+          <tr><td>Butterfly</td><td>Wing changes and curved path travel.</td><td>Small scale, sparse population and authored paths.</td></tr>
+          <tr><td>Gust</td><td>A bounded transient strengthens anchored foliage deformation.</td><td>Trunks and roots remain fixed.</td></tr>
+          <tr><td>Flow, light, weather</td><td>Material refraction, highlights, rays, clouds, mist and rain.</td><td>Source-space masks keep changes in their regions.</td></tr>
+          <tr><td>Pointer parallax</td><td>A very small view offset.</td><td>Shared layer projection; a depth cue, not the main vocabulary.</td></tr>
+        </tbody></table></div>
+        <p>These are distinct, addressable behaviors—not physical simulation, animal intelligence or a general collision system. Pause holds the shared clock; reduced motion begins paused. Hidden pages suspend animation/audio and reset their wall-time baseline on return. Paused or hidden intervals must not accumulate missed calls. Sound needs a gesture. Without JavaScript or WebGL, retain a static image.</p>
+      </section>
+      <section id="coordinates"><h2>5. Author in image coordinates</h2>
+        <p>Use normalized source-image positions: <strong>(0, 0) is top-left, (1, 1) is bottom-right</strong>. Put paths, anchors, water boundaries and light openings there. Every layer shares cover cropping, 2.5% overscan and pointer offset; viewport-percentage masks would separate from the image when cropped.</p>
+        <pre tabindex="0"><code>cover = [min(1, viewportAspect / imageAspect),
+         min(1, imageAspect / viewportAspect)]
+sourcePoint = (viewportPoint - 0.5) * cover / overscan
+              + 0.5 + pointerOffset</code></pre>
+        <p>Keep the WebGL texture-orientation conversion at the sampling boundary. Use the inverse mapping for the sticker canvas. Check a known anchor in landscape and portrait before tuning motion. <code>scene-config.js</code> supplies the common 1672/941 aspect, 1.025 overscan and material settings; the manifest supplies instances and paths.</p>
+        <p>The 2 × 2 parrot atlas has three flight poses and a perched pose. Measure alpha bounds on load, share flight crops and register each torso so the body does not jump with its wings. Anchor a perched bird at its feet. Match focus, cutout fringes, scale, contrast and lighting to the scene; a reusable sticker still needs art direction.</p>
+        <p>The diffuse neutral forest plate has no visible sun or baked directional beams. The browser supplies changing rays, dapple, warmth, exposure and water highlights. The old sunlit plate is provenance, not a runtime request. Neutral is not unlit: diffuse shading and reflections remain. Without geometry or surface normals, this is <strong>not ray tracing, physical relighting or an astronomical model</strong>.</p>
+      </section>
+      <section id="sound"><h2>6. Sound belongs to events and distance</h2>
+        <p>Filtered noise supplies a low-level stream, leaf and rain bed. Synthesized animal cues have stable IDs, stereo position, distance attenuation and low-pass filtering. At most three transient voices may sound, with a minimum 0.8-second global cue gap and three seconds between parrot cues. Deduplicate events and release each voice when it ends.</p>
+        <p>Start quietly, leave headroom and fade transitions. Repeated Sound toggles must not create overlapping contexts or calls. Browser gains are relative, not calibrated sound-pressure levels; the listener controls actual volume.</p>
+        <p>This is procedural synthesis, not field recording or scientifically accurate species calls. It is not documentary evidence. Agent direction must not bypass sound opt-in, volume, pause or reduced-motion preferences.</p>
+      </section>
+      <section id="performance"><h2>7. Spend explicit budgets</h2>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Performance budgets"><table><thead><tr><th scope="col">Budget</th><th scope="col">Policy—not a guarantee</th></tr></thead><tbody>
+          <tr><td>Presentation</td><td>At most 30 rendered frames per second, about 33.3 ms apart.</td></tr>
+          <tr><td>WebGL surface</td><td>Initially 1.2 million pixels, or 0.65 million on narrow/coarse-pointer devices; floor 0.36 million.</td></tr>
+          <tr><td>Drawing</td><td>One WebGL scene pass and a small transparent sticker canvas; reuse textures and decoded atlases.</td></tr>
+          <tr><td>Idle/audio</td><td>No settled paused/hidden render loop; sound opt-in, bounded voices and hidden-page suspension.</td></tr>
+          <tr><td>Commands</td><td>Allowlisted actions, bounded receipts/history, no arbitrary code or per-frame network calls.</td></tr>
+        </tbody></table></div>
+        <p>The quality controller checks 90 positive frame intervals. If over 22% exceed 48 ms, it multiplies the cap by 0.76, with a 360,000-pixel floor and at least six scene seconds between reductions. Quality stays reduced until reload. Reset the hidden/resume baseline; count very slow foreground frames so overloaded devices can reduce resolution.</p>
+        <p>About → Rendering details reports observed cadence, internal dimensions, cap and average CPU submission. One-off manual draws do not inflate the counter. <strong>CPU submission is not GPU completion time.</strong> Keep blocking graphics queries/readbacks out of production frames. Test physical target devices before claiming mobile frame rate or battery efficiency.</p>
+        <h3>Asset record</h3>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Compressed asset sizes"><table><thead><tr><th scope="col">Image</th><th scope="col">Bytes</th></tr></thead><tbody><tr><td>Main neutral plate</td><td>409,902</td></tr><tr><td>Smaller candidate</td><td>148,944</td></tr><tr><td>Foreground bough</td><td>122,896</td></tr><tr><td>Parrot atlas</td><td>261,186</td></tr><tr><td>Transparent leaf</td><td>42,566</td></tr><tr><td>Main plate + bough + atlas + leaf</td><td>836,550</td></tr></tbody></table></div>
+        <p>These are file bytes, not total transfer or decoded memory. Main/small plates are 1672 × 941 and 1008 × 568. Selection depends on viewport, crop and pixel ratio. Page/code files add to transfer; decoded textures use more memory.</p>
+        <p>The new leaf is a 512 × 512 generated transparent cutout; the small butterfly and ripple rings are procedural. The complete leaf prompt and export settings are recorded in <a href="assets/GENERATION.md">asset provenance</a>.</p>
+        <h3>Validation record</h3>
+        <p><strong>Historical version 2, 25 September 2026:</strong> local desktop Chromium reported 30.0 fps / 0.2 ms average CPU submission at 886 × 638 CSS pixels (1108 × 798 WebGL surface), and 30.0 fps / 0.3 ms at 320 × 568 (320 × 568 surface). These short host observations are not physical-phone measurements or sustained benchmarks, and <strong>do not measure this sticker-runtime revision</strong>.</p>
+        <p><strong>Sticker-book revision, 25 September 2026:</strong> all three suites pass on Node 22.16.0. Browser checks covered 320 × 568, 390 × 844, 844 × 390 and a 1280 × 720 project-prefix view: direct control, pause rejection, leaf contact history, guides/immersion and About → methodology. The local <code>/MAP/</code> view had no console errors; the retired route returned 404. Three-second rolling readouts showed 30.0 fps / 0.3 ms CPU submission at 1280 × 720 (1461 × 822 render surface), and 30.0 fps / 0.8 ms at 390 × 844 (390 × 844 surface). These are desktop-host viewport tests, not physical-phone or GPU measurements. A PR workflow runs the three contract suites independently of deployment.</p>
+        <p>For this revision, run all three contract suites below and record browser checks separately. Tests of state/commands cannot establish shader output, audio quality, contact registration or thermal performance. The acceptance checklist is a validation procedure, not a claim that all devices pass.</p>
+      </section>
+      <section id="replicate"><h2>8. Replicate and extend</h2>
+        <ol>
+          <li><strong>Choose a fixed view and readable action space.</strong> A strong plate needs depth and room for motion. A busy forest may hide useful behavior; a street, room or plaza could be a clearer interaction test.</li>
+          <li><strong>Prepare neutral art and a small asset set.</strong> Record provenance and full prompts. Avoid baked beams for relighting. Export compressed alternatives and inspect alpha edges.</li>
+          <li><strong>Separate types from instances.</strong> Put reusable action metadata in the catalog, named placements/paths in a manifest. A parrot type must not contain an entire forest route.</li>
+          <li><strong>Author registration and constraints.</strong> Set anchors, depth, paths and contact points. Reauthor masks for each plate. Check portrait and landscape.</li>
+          <li><strong>Implement one behavior at a time.</strong> Distinguish pose changes, travel, deformation, contact, flow and event audio. More amplitude is not a new kind of movement.</li>
+          <li><strong>Keep policy outside rendering.</strong> Direct through bounded commands. Observe first, use unique IDs, inspect receipts and handle stale revisions. Never inject executable callbacks from command data.</li>
+          <li><strong>Honor visitor controls.</strong> Preserve pause, reduced motion, audio consent, visibility and static fallback. Future agents do not implicitly outrank these preferences.</li>
+          <li><strong>Test, measure and deploy.</strong> Run deterministic checks, browser review and real-device measurements. Verify relative URLs at the Pages project prefix.</li>
+        </ol>
+        <pre tabindex="0"><code>python -m http.server 8765 --bind 127.0.0.1
+# Open http://127.0.0.1:8765/
+node selftest.mjs
+node lib/sticker-world/selftest.mjs
+node sprite-selftest.mjs</code></pre>
+        <p>The existing Pages workflow publishes the repository root after merge to <code>main</code>. This is a migration, not two maintained forest implementations. The removed demo route should not host a duplicate. Historical SVG studies and formal research files remain separate.</p>
+        <h3>Next steps—not implemented here</h3>
+        <ul><li>Versioned asset/library packaging, provenance checks and manifest migration.</li><li>Generalized occlusion, contact surfaces, path affordances and action composition beyond the forest adapter.</li><li>An agent transport adapter with explicit authority, rate limits and approval policy.</li><li>Shared sessions, permissions, arbitration, persistence and durable replay. GitHub Pages alone provides none of these services.</li><li>A second scene that tests reuse with new actions, rather than only a new background.</li></ul>
+      </section>
+      <section id="checks"><h2>9. Acceptance checks</h2>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Acceptance checklist"><table><thead><tr><th scope="col">Check</th><th scope="col">Criterion</th></tr></thead><tbody>
+          <tr><td>Identity/isolation</td><td>Types, instances and paths stay separate; observations cannot mutate runtime state.</td></tr>
+          <tr><td>Commands</td><td>Invalid objects/actions/paths/numbers fail; identical retry, conflicting ID reuse and stale revision are distinct.</td></tr>
+          <tr><td>Direction</td><td>Human and ambient control share validation; disabling the director stops new ambient choices.</td></tr>
+          <tr><td>Motion/boundaries</td><td>Fall, contact, drift, wingbeats, ripples and gusts read differently; banks, logs, trunks and anchors remain registered.</td></tr>
+          <tr><td>Lifecycle</td><td>Pause freezes progress; reduced motion starts paused; hidden time produces no event/audio backlog.</td></tr>
+          <tr><td>Controls/audio</td><td>Light changes do not accelerate actions; rain is independent; sound stays opt-in and quiet.</td></tr>
+          <tr><td>Access/failure</td><td>Portrait, short landscape, keyboard, About and directing controls remain usable; failed assets/WebGL retain a baseline.</td></tr>
+          <tr><td>Performance</td><td>No idle work or unbounded history; measurements name device, resolution and sample interval.</td></tr>
+          <tr><td>Deployment</td><td>Root, methodology, modules and assets resolve below <code>/MAP/</code>; the retired route is not a second implementation.</td></tr>
+        </tbody></table></div>
+      </section>
+      <section id="sources"><h2>Scope &amp; sources</h2>
+        <p>An imagined Congo Basin forest inspired by the Sangha region, not a photograph of a particular location. See the <a href="https://whc.unesco.org/en/list/1380/">UNESCO Sangha Trinational record</a>. No local people, music or cultural practices are reproduced; see <a href="demos/dzanga/CULTURAL_GROUNDING.md">cultural grounding</a>.</p>
+        <p>References and records: <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices">WebGL best practices</a>, <a href="ART_DIRECTION.md">art direction</a>, <a href="assets/GENERATION.md">full asset prompts</a>, <a href="lib/sticker-world/README.md">runtime contract</a>, <a href="https://github.com/PaulTiffany/MAP">source repository</a>. Keep this article, the complete <a href="METHODOLOGY.md">Markdown methodology</a> and contract aligned with the implementation. They describe reproducible public decisions, not hidden reasoning traces.</p>
+      </section>
+    </article>
+  </div>
+  <footer><p>A world can begin with a single living frame.</p><a href="./">Return to The listening forest →</a></footer>
+</body>
+</html>

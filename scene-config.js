@@ -6,7 +6,6 @@ export const forestConfig = {
   fps: 30,
   cycleSeconds: 180,
   hours: { min: 6, max: 19.5, initial: 8 },
-  presets: { dawn: 6.5, morning: 8, noon: 12.5, dusk: 18.7 },
   pixels: { desktop: 1200000, mobile: 650000, minimum: 360000 },
   assets: { foliage: 'assets/foreground-bough.webp' },
   stream: { center: .49, horizon: .585, spread: .385 },
